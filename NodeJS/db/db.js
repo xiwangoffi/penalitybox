@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const connectionString = "mongodb+srv://rboisseau:xya2UYrvkpJEo6SY@penalitybox.9gz0vcq.mongodb.net/?retryWrites=true&w=majority";
+const connectionString = "mongodb+srv://rboisseau:14twZ0D3PJWnhwwH@penalitybox.9gz0vcq.mongodb.net/?retryWrites=true&w=majority";
 
 const client = new MongoClient(connectionString, {
     useNewUrlParser: true,
@@ -11,14 +11,15 @@ const client = new MongoClient(connectionString, {
 var dbConnection;
 
 module.exports = {
-    client, connectionString: async (callback) => {
+    client,
+    connectToServer: async (callback) => {
         try {
             var db = await client.connect();
 
-            dbConnection = db.db("penalitybox");
+            dbConnection = db.db("PenalityBox");
 
             console.log("Successfully connected to MongoDB.");
-            return dbConnection;
+            return dbConnection
         } catch (e) {
             console.error(e);
             return e;
