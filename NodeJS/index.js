@@ -40,7 +40,7 @@ app.get("/version/list", function (req, res) {
       .find({})
       .toArray(function (err, result) {
         if (err) {
-          res.status(400).send("Error fetching accounts!");
+          res.status(400).send("Error fetching versions!");
         } else {
           res.json(result);
         }

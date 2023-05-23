@@ -15,6 +15,7 @@ module.exports = {
     connectToServer: async (callback) => {
         try {
             var db = await client.connect();
+            console.log("Client connected")
 
             dbConnection = db.db("PenalityBox");
 
