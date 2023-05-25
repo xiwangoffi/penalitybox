@@ -161,10 +161,6 @@ const style = StyleSheet.create({
 
     validateButton: {
         marginTop: '1.5%',
-        shadowColor: 'black',
-        shadowRadius: 5,
-        shadowOffset: {width: -2, height: 2},
-        shadowOpacity: 0.7,
         width: 250,
     },
 })
