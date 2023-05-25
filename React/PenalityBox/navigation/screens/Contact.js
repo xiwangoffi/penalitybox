@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Dimensions } from 'react-native';
-import footer from '../../components/footer';
+import { View, Text, TextInput, StyleSheet, Button, Dimensions, ScrollView } from 'react-native';
+import Footer from '../../components/footer';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
@@ -35,7 +35,7 @@ export default function ContactScreen({navigation}) {
         )
     } else {
         return(
-            <View style={style.mainViewContainer}> 
+            <View style={style.mainViewContainer}>
                 <TextInput style={[style.informationContainer, style.textAlign, style.informationBox, style.boxShadow]} placeholder='Nom'></TextInput> 
                 <TextInput style={[style.informationContainer, style.textAlign, style.informationBox, style.boxShadow]} placeholder='Prénom'></TextInput>
                 <TextInput style={[style.informationContainer, style.textAlign, style.informationBox, style.boxShadow]} placeholder='Mail' keyboardType='email-address'></TextInput>
@@ -43,6 +43,7 @@ export default function ContactScreen({navigation}) {
                 <View style={[style.validateButton, style.boxShadow]}>
                     <Button title='Valider' color='grey'/>
                 </View>
+                <Footer />
             </View>
         )
     }

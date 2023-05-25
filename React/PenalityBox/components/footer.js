@@ -1,6 +1,19 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
-export class Footer extends React.Component {
-    
+export default function Footer() {
+    return(
+        <View style={style.footer}>
+            <Text>sxdcfvgbh</Text>
+        </View>
+    )
 }
+
+const style = StyleSheet.create({
+    footer: {
+        width: '100%',
+        height: 50,
+        backgroundColor: 'black',
+        flex: 1,
+    },
+})
