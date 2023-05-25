@@ -1,6 +1,10 @@
 import * as React from 'react';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Screens
@@ -17,11 +21,24 @@ const appliName = 'App';
 const versionsName = 'Versions';
 const adminName = 'Admin';
 
-const Tab = createBottomTabNavigator();
+//const Tab = createBottomTabNavigator();
+//const Tab = createMaterialTopTabNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function MainContainer() {
     return(
         <NavigationContainer>
+            <Drawer.Navigator>
+                <Drawer.Screen name={homeName} component={HomeScreen}/>
+                <Drawer.Screen name={contactName} component={ContactScreen}/>
+                <Drawer.Screen name={appliName} component={AppliScrenn}/>
+                <Drawer.Screen name={versionsName} component={VersionsScreen}/>
+                <Drawer.Screen name={adminName} component={AdminScreen}/>
+            </Drawer.Navigator>
+        </NavigationContainer>
+
+
+        /*<NavigationContainer>
             <Tab.Navigator
                 initialRouteName={homeName}
                 screenOptions={({route}) => ({
@@ -43,6 +60,10 @@ export default function MainContainer() {
 
                         return <Ionicons name={iconName} size={size} color={color}/>
                     },
+                    tabBarActiveTintColor: 'white',
+                    tabBarInactiveTintColor: 'grey',
+                    tabBarActiveBackgroundColor: 'black',
+                    tabBarInactiveBackgroundColor: 'black',
                 })}>
 
                 <Tab.Screen name={homeName} component={HomeScreen}/>
@@ -52,6 +73,6 @@ export default function MainContainer() {
                 <Tab.Screen name={adminName} component={AdminScreen}/>
 
             </Tab.Navigator>
-        </NavigationContainer>
+        </NavigationContainer>*/
     );
 }
