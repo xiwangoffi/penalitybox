@@ -42,11 +42,11 @@ export default function HomeScreen({navigation}) {
                         Le boîtier est également télécommandable.
                         </Text>
                         <View style={styles.gifContainer}>
-                            <Image source={require('../../assets/gif/penalityBox.gif')} resizeMode='contain' style={styles.ownerNamesImage}/>
+                            <Image source={require('../../assets/gif/penalityBox.gif')} resizeMode='contain' style={styles.ownerNamesImage} alt='PenalityBox gif demo'/>
                         </View>
                     </View>
                     <View style={styles.imageContainer}>
-                        <Image source={require('../../assets/img/logoPenalityBoxDark.png')} style={styles.penalityLogo} resizeMode='contain' alt='PenalityBox'/>
+                        <Image source={require('../../assets/img/logoPenalityBoxDark.png')} style={styles.penalityLogo} resizeMode='contain' alt='PenalityBox Logo'/>
                     </View>
                 </View>
                 <Footer navigation={navigation} />
