@@ -7,14 +7,14 @@ export default function Footer({navigation}) {
     return(
         <View style={styles.footer}>
             <View>
-                <Text style={styles.footerText}>SARL Libreboot</Text>
+                <Text style={styles.white}>SARL Libreboot</Text>
             </View>
             <View>
                 <Image source={require('../assets/img/logoLB2.png')} style={styles.logo} resizeMode='contain'/>
             </View>
             <View>
             <Text
-            style={styles.footerText}
+            style={styles.white}
             onPress={() => navigation.navigate('Home')}
             >Informations légales</Text>
             </View>

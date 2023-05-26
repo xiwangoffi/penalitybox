@@ -1,0 +1,31 @@
+Concepteur et co-réalisation :
+
+M. Bardi Jean-Marc
+
+Développement en C et co-réalisation :
+
+M. Neyret Charles
+
+
+
+
+
+
+Directeur de développement : Jean-Marc Bardi
+
+application Android : MATHIEU PRO
+
+co-développement Arduino : ISSAM ZEGGARI
+
+Co-développement, protocole d'interfaçage entre android et la Penality Box : ALEXANDRE LAVEFVE , ISSAM ZEGGARI
+
+
+
+
+
+
+Directeur de développement : M. Bardi Jean-Marc
+
+Application Android : MATHIEU PRO
+
+Protocole d'interfaçage entre android et la Penality Box : ALEXANDRE LAVEFVE

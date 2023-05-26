@@ -1,7 +1,7 @@
 const styles = {
 /*
 
- - Global background
+ - Global class
 
 */
 
@@ -12,9 +12,32 @@ const styles = {
         justifyContent: 'center'
     },
 
+    boxShadow: {
+        shadowColor: 'black',
+        shadowRadius: 5,
+        shadowOffset: {width: -2, height: 2},
+        shadowOpacity: 0.7,
+    },
+
+    textAlign: {
+        textAlign: 'center',
+    },
+
+    white: {
+        color: 'white',
+    },
+
+    verticalBr: {
+        marginVertical: '10%',
+    },
+
+    br: {
+        marginTop: '5%',
+    },
+
 /*
 
- - Global Background
+ - Global class
 
  --------------------------------
 
@@ -23,7 +46,93 @@ const styles = {
 
 */
 
-    
+    /*
+
+     - Container
+
+    */
+
+    presentationContainer: {
+        borderWidth: 1,
+        backgroundColor: '#736C6C',
+        borderRadius: 7,
+        borderColor: '#736C6C',
+        width: '60%',
+        height: '70%',
+        flexDirection: 'row',
+    },
+
+    contentContainer: {
+        width: '68%',
+        height: '100%',
+        marginRight: '1%',
+        marginLeft: '1%',
+    },
+
+    imageContainer: {
+        verticalAlign: 'center',
+        width: '30%',
+        height: '100%',
+        borderLeftWidth: 2,
+        borderLeftColor: 'black',
+    },
+
+    gifContainer: {
+        width: '100%',
+        height: '81%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    /*
+
+     - Container
+
+     --------------------
+
+     - Image
+
+    */
+
+    penalityLogo: {
+        position: 'static',
+        width: '487',
+        height: '528',
+    },
+
+    ownerNamesImage: {
+        height: '70%',
+        width: '70%',
+    },
+
+    /*
+
+     - Image
+
+     ---------------
+
+     - Text
+
+    */
+
+     contentTitleText: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        textDecoration: 'underline',
+     },
+
+     contentText: {
+        marginTop: 16,
+        fontSize: 16,
+        textAlign: 'justify',
+     },
+
+     /*
+
+     - Text
+
+     */
 
 /*
 
@@ -47,7 +156,6 @@ const styles = {
         marginTop: '5%',
         borderRadius: 7,
         borderColor: 'white',
-        color: 'white',
     },
     phoneInformationBox: {
         width: 250,
@@ -63,20 +171,6 @@ const styles = {
     /*
 
      - Phone Container
-
-     ------------------
-
-     - Text 
-
-    */
-
-    textAlign: {
-        textAlign: 'center',
-    },
-
-    /*
-
-     - Text
 
      --------------
 
@@ -101,19 +195,11 @@ const styles = {
 
     */
 
-    boxShadow: {
-        shadowColor: 'black',
-        shadowRadius: 5,
-        shadowOffset: {width: -2, height: 2},
-        shadowOpacity: 0.7,
-    },
-
     informationContainer: {
         borderWidth: 1,
         marginTop: '2%',
         borderRadius: 7,
         borderColor: 'white',
-        color: 'white',
     },
     informationBox: {
         width: 350,
@@ -159,9 +245,12 @@ const styles = {
         height: 53,
         marginHorizontal: 150,
     },
-    footerText: {
-        color: 'white',
-    },
 }
+
+/*
+
+ - CSS Footer.js
+
+*/
 
 export default styles;

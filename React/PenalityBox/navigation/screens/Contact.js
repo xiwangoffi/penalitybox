@@ -23,24 +23,24 @@ export default function ContactScreen({navigation}) {
     });
 
     if(dimensions.window.height >= dimensions.screen.width) {
-        return(
+        return( //Gestion téléphone
             <View style={styles.background}> 
-                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox]} placeholder='Nom' placeholderTextColor='white'></TextInput> 
-                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox]} placeholder='Prénom' placeholderTextColor='white'></TextInput>
-                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='white'></TextInput>
-                <TextInput style={[styles.phoneInformationContainer, styles.phoneMessageBox]} placeholder='Message' multiline={true} placeholderTextColor='white'></TextInput>
+                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]} placeholder='Nom' placeholderTextColor='white'></TextInput> 
+                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]} placeholder='Prénom' placeholderTextColor='white'></TextInput>
+                <TextInput style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='white'></TextInput>
+                <TextInput style={[styles.phoneInformationContainer, styles.phoneMessageBox, styles.white]} placeholder='Message' multiline={true} placeholderTextColor='white'></TextInput>
                 <View style={styles.phoneValidateButton}>
                     <Button title='Valider' color='grey'/>
                 </View>
             </View>
         )
     } else {
-        return(
+        return( //Gestion PC
             <View style={styles.background}>
-                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow]} placeholder='Nom' placeholderTextColor='lightgrey'></TextInput> 
-                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow]} placeholder='Prénom' placeholderTextColor='lightgrey'></TextInput>
-                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='lightgrey'></TextInput>
-                <TextInput style={[styles.informationContainer, styles.messageBox, styles.boxShadow]} placeholder='Message' multiline={true} placeholderTextColor='lightgrey'></TextInput>
+                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} placeholder='Nom' placeholderTextColor='lightgrey'></TextInput> 
+                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} placeholder='Prénom' placeholderTextColor='lightgrey'></TextInput>
+                <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='lightgrey'></TextInput>
+                <TextInput style={[styles.informationContainer, styles.messageBox, styles.boxShadow, styles.white]} placeholder='Message' multiline={true} placeholderTextColor='lightgrey'></TextInput>
                 <View style={[styles.validateButton, styles.boxShadow]}>
                     <Button title='Valider' color='grey'/>
                 </View>
