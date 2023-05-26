@@ -1,28 +1,42 @@
 const styles = {
 /*
 
- - CSS Contact.js
+ - Global background
 
-    /*
+*/
 
-    - CSS for Phone
-
-     - Background
-
-    */
-
-     background: {
+    background: {
         flex: 1,
         backgroundColor: '#837A7A',
         alignItems: 'center',
         justifyContent: 'center'
     },
 
+/*
+
+ - Global Background
+
+ --------------------------------
+
+
+ - CSS Home.js
+
+*/
+
+    
+
+/*
+
+ - CSS Home.js
+
+ ------------------------
+
+ - CSS Contact.js
+
     /*
 
-     - Background
+    - CSS for Phone
 
-     ----------------
 
      - Phone Container
 
