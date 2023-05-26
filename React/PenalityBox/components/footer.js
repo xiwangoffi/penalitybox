@@ -1,19 +1,23 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import styles from '../styles/styles';
 
-export default function Footer() {
+export default function Footer({navigation}) {
+
     return(
-        <View style={style.footer}>
-            <Text>sxdcfvgbh</Text>
+        <View style={styles.footer}>
+            <View>
+                <Text style={styles.footerText}>SARL Libreboot</Text>
+            </View>
+            <View>
+                <Image source={require('../assets/img/logoLB2.png')} style={styles.logo} resizeMode='contain'/>
+            </View>
+            <View>
+            <Text
+            style={styles.footerText}
+            onPress={() => navigation.navigate('Home')}
+            >Informations légales</Text>
+            </View>
         </View>
     )
 }
-
-const style = StyleSheet.create({
-    footer: {
-        width: '100%',
-        height: 50,
-        backgroundColor: 'black',
-        flex: 1,
-    },
-})
