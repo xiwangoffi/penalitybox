@@ -22,7 +22,7 @@ export default function HomeScreen({navigation}) {
         return () => subscription?.remove();
     });
 
-    if(dimensions.window.width >= dimensions.screen.width) {
+    if(dimensions.window.height >= dimensions.screen.width) {
         return(
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text onPress={() => Alert.alert('Home Screen')}
@@ -31,7 +31,7 @@ export default function HomeScreen({navigation}) {
         )
     } else {
         return(
-            <View style={styles.background}>
+            <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
                 <View style={[styles.presentationContainer, styles.boxShadow]}>
                     <View style={styles.contentContainer}>
                         <Text style={[styles.contentTitleText, styles.white]}>La PenalityBox</Text>

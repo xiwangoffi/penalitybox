@@ -8,8 +8,6 @@ const styles = {
     background: {
         flex: 1,
         backgroundColor: '#837A7A',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
 
     boxShadow: {
@@ -19,8 +17,24 @@ const styles = {
         shadowOpacity: 0.7,
     },
 
+    formBoxShadow: {
+        elevation: 5,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.7,
+        shadowRadius: 2,
+    },
+
     textAlign: {
         textAlign: 'center',
+    },
+
+    alignItems: {
+        alignItems: 'center',
+    },
+
+    justifyContent: {
+        justifyContent: 'center',
     },
 
     white: {
@@ -33,6 +47,12 @@ const styles = {
 
     br: {
         marginTop: '5%',
+    },
+
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
     },
 
 /*
@@ -196,9 +216,9 @@ const styles = {
     */
 
     informationContainer: {
-        borderWidth: 1,
-        marginTop: '2%',
-        borderRadius: 7,
+        borderBottomWidth: 1,
+        borderRadius: 2,
+        marginLeft: '2%',
         borderColor: 'white',
     },
     informationBox: {

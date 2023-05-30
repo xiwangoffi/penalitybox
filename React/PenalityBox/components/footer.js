@@ -15,7 +15,7 @@ export default function Footer({navigation}) {
             <View>
             <Text
             style={styles.white}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('Accueil')}
             >Informations légales</Text>
             </View>
         </View>

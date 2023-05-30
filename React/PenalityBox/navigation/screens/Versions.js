@@ -22,7 +22,7 @@ export default function VersionScreen({navigation}) {
         return () => subscription?.remove();
     });
 
-    if(dimensions.window.width >= dimensions.screen.width) {
+    if(dimensions.window.height >= dimensions.screen.width) {
         return(
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text onPress={() => Alert.alert('Verion Screen')}
