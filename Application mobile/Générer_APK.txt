@@ -1,0 +1,60 @@
+!!! Vous devez être dans le dossier de votre projet !!!
+
+Étape 1 :
+
+Pour une nouvelle application, vous devez faire ce qui suit :
+
+    !!! Dans le cas de la PenalityBox vous pouvez directement passer à l'étape 2
+
+    1 - Générer la keystore
+
+        keytool -genkey -v -keystore your_key_name.keystore -alias your_key_alias -keyalg RSA -keysize 2048 -validity 10000
+
+
+    2 - Ajouter la keystore au projet :
+
+        mv my-release-key.keystore android/app
+
+        chmod 775 android/app/your_key_name.keystore
+
+
+        Modifier le fichier android\app\build.gradle :
+
+        android {
+            ....
+            signingConfigs {
+                release {
+                    storeFile file('your_key_name.keystore')
+                    storePassword 'your_key_store_password'
+                    keyAlias 'your_key_alias'
+                    keyPassword 'your_key_file_alias_password'
+                }
+            }
+            buildTypes {
+                release {
+                    ....
+                    signingConfig signingConfigs.release
+                }
+            }
+        }
+
+
+    3 - Générer le release APK :
+
+        Ajouter la ligne suivante au fichier android/gradle.properties :
+
+        org.gradle.jvmargs=--add-opens java.base/java.io=ALL-UNNAMED
+
+
+Étape 2 :
+
+Une fois les étapes précedentes effectués, vous n'aurez plus besoin de les refaires.
+Pour générer l'APK, executer les commandes suivantes à partir de la racine du projet :
+
+    !!! Dans le cas de la PenalityBox, ne pas oublier de changer l'url dans le fichier url.json, replacer "http://localhost:4000" par "http://10.0.0.1" qui est l'ip de l'arduino.
+
+    cd android
+
+    ./gradlew assembleRelease
+
+L'APK générer se trouve dans le dossier : android/app/build/outputs/apk/release

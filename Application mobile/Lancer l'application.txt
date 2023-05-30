@@ -1,0 +1,24 @@
+1 - Configurer le fichier url.json
+    Pour lancer l'application et la tester avec le web service arduino.js, indiquer comme url "http://localhost:4000".
+    
+    Et pour la tester avec la PenalityBox, indiquer comme url "http://10.0.0.1".
+
+
+2 - Lancer l'application
+    Dans le cas d'un test en local avec le web service, ouvrer un terminal ou utiliser celui de vscode, puis déplacer vous dans le dossier "Arduino" du projet et lancer la commande :
+        node arduino.js
+
+    Ensuite ouvrer deux autres terminaux, et déplacer vous dans le dossier "PenalityBox (Application)" pour les deux, dans l'un lancer la commande :
+        npx react-native start
+    
+    Et pour l'autre la commande :
+        npx react-native run-android
+    
+    Dans le cas d'un test en local avec le web service, une fois que la commande du dernier terminal est fini, il faut lier les port 4000 de l'ordinateur et de l'émulateur pour qu'il puissent communiquer dessus, vous devez executer la commande :
+        adb reverse tcp:4000 tcp:4000
+
+
+3 - Appliquer des modifications
+    Si vous n'avez pas installer de module node mais simplement ajouter ou modifier du code, les mises à jours ce font normalement automatiquement à l'enregistrement du fichier modifier, vous pouvez également recharger l'application, aller sur le terminal où vous avez lancer "npx react-native start" et appuyer sur "r".
+
+    Si vous avez installer un nouveau module node ou que vous avez un souci, vous pouvez recompiler l'application, il suffit de relancer la commande "npx react-native run-android".

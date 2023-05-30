@@ -265,12 +265,46 @@ const styles = {
         height: 53,
         marginHorizontal: 150,
     },
-}
 
 /*
 
  - CSS Footer.js
 
+ -------------------------------
+
+ - CSS Contributors.js
+
 */
+
+    roleContainer: {
+        flexDirection: 'row',
+        width: '100%',
+    },
+
+    jobTitle: {
+        marginBottom: '2%',
+        backgroundColor: 'black',
+    },
+
+    test: {
+        backgroundColor: 'green',
+    },
+
+    svgPos: {
+        marginTop: '2.5%',
+        marginHorizontal: '3%',
+    },
+
+    jobFont: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+
+/*
+
+ - CSS Contributors.js
+
+*/
+}
 
 export default styles;
