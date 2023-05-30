@@ -29,6 +29,10 @@ const styles = {
         textAlign: 'center',
     },
 
+    mazette: {
+        backgroundColor: 'red',
+    },
+
     alignItems: {
         alignItems: 'center',
     },
@@ -279,15 +283,11 @@ const styles = {
     roleContainer: {
         flexDirection: 'row',
         width: '100%',
+        backgroundColor: 'green',
     },
 
     jobTitle: {
         marginBottom: '2%',
-        backgroundColor: 'black',
-    },
-
-    test: {
-        backgroundColor: 'green',
     },
 
     svgPos: {
@@ -305,6 +305,7 @@ const styles = {
  - CSS Contributors.js
 
 */
+
 }
 
 export default styles;
