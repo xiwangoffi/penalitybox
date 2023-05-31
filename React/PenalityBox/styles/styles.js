@@ -29,10 +29,6 @@ const styles = {
         textAlign: 'center',
     },
 
-    mazette: {
-        backgroundColor: 'red',
-    },
-
     alignItems: {
         alignItems: 'center',
     },
@@ -48,6 +44,7 @@ const styles = {
     verticalBr: {
         marginVertical: '10%',
     },
+
 
     br: {
         marginTop: '5%',
@@ -241,6 +238,12 @@ const styles = {
         width: 250,
     },
 
+    /*
+
+     - PC Container
+
+    */
+
 /*
 
  - CSS Contact.js
@@ -280,25 +283,123 @@ const styles = {
 
 */
 
-    roleContainer: {
-        flexDirection: 'row',
+    /*
+
+     - Credits Container
+
+    */
+
+    phoneRoleContainer: {
+        flexDirection: 'column',
         width: '100%',
-        backgroundColor: 'green',
+        marginBottom: '2%',
+    },
+
+    mainJobContainer: {
+        width: '38%',
+        height: '65%',
+        flexDirection: 'row',
+    },
+
+    textContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    
+    centeredTextContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+
+    jobTextContainer: {
+        flex: 1,
+        marginTop: '2.5%',
+    },
+    
+    jobIconsContainer: {
+        width: '20%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+
+    jobTitleContainer: {
+        width: '80%',
+        height: '100%',
+        justifyContent: 'space-between',
+    },
+
+    /*
+
+     - Credits Container
+
+     ----------------------
+
+     - Icons pos
+
+    */
+
+    jobFirstIcon: {
+        marginTop: '10%',
+    },
+
+    jobLastIcon: {
+        marginBottom: '17%',
     },
 
     jobTitle: {
         marginBottom: '2%',
     },
 
-    svgPos: {
-        marginTop: '2.5%',
+    /*
+
+     - Icons pos
+
+     ------------------------
+
+     - Image
+
+    */
+
+    phoneCreditsImage: {
+        marginTop: '1.5%',
         marginHorizontal: '3%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+
+    jobIconsSize: {
+        width: 52,
+        height: 52,
+    },
+
+    phoneJobIconsSize: {
+        width: 42,
+        height: 42,
+    },
+
+    /*
+
+     - Image
+
+     ---------------------
+
+     - Font
+
+    */
 
     jobFont: {
         fontSize: 16,
         fontWeight: 'bold',
     },
+
+    /*
+
+     - Font
+
+    */
 
 /*
 

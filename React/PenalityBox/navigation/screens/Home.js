@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, Dimensions, Alert } from 'react-native';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 
@@ -7,6 +7,7 @@ const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
 export default function HomeScreen({navigation}) {
+    
     const [dimensions, setDimensions] = useState({
         window: windowDimensions,
         screen: screenDimensions,

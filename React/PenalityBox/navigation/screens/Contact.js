@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Dimensions, ScrollView, Image } from 'react-native';
+import { View, TextInput, Button, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
