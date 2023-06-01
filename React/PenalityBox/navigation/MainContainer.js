@@ -12,6 +12,7 @@ import AppliScrenn from './screens/Appli';
 import VersionsScreen from './screens/Versions';
 import AdminScreen from './screens/Admin';
 import CreditsScreen from './screens/Credits';
+import LoginModal from '../components/LoginModal';
 
 //Screen names
 const homeName = 'Accueil';
@@ -20,6 +21,7 @@ const appliName = 'App';
 const versionsName = 'Versions';
 const adminName = 'Admin';
 const creditsScreen = 'Crédits';
+const loginModal = 'Connexion'
 
 const Drawer = createDrawerNavigator();
 
@@ -33,6 +35,7 @@ export default function MainContainer() {
                 <Drawer.Screen name={creditsScreen} component={CreditsScreen}/>
                 <Drawer.Screen name={appliName} component={AppliScrenn}/>
                 <Drawer.Screen name={adminName} component={AdminScreen}/>
+                <Drawer.Screen name={loginModal} component={LoginModal}/>
             </Drawer.Navigator>
         </NavigationContainer>
     );

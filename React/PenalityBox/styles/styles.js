@@ -258,7 +258,7 @@ const styles = {
         width: '40%',
         height: '10%',
         backgroundColor: '#837A7A',
-        position: 'fixed',
+        position: 'absolute',
         bottom: 0,
         flexDirection : 'row',
         alignItems: 'center',
@@ -279,7 +279,7 @@ const styles = {
 
  -------------------------------
 
- - CSS Contributors.js
+ - CSS Phone/CreditsList.js
 
 */
 
@@ -291,7 +291,9 @@ const styles = {
 
     phoneRoleContainer: {
         flexDirection: 'column',
+        backgroundColor: 'green',
         width: '100%',
+        height: '100%',
         marginBottom: '2%',
     },
 
@@ -364,8 +366,7 @@ const styles = {
     */
 
     phoneCreditsImage: {
-        marginTop: '1.5%',
-        marginHorizontal: '3%',
+        marginTop: '5%',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -403,7 +404,7 @@ const styles = {
 
 /*
 
- - CSS Contributors.js
+ - CSS Phone/CreditsList.js
 
 */
 

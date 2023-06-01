@@ -44,7 +44,7 @@ export default function creditsList() {
                         <Text style={[styles.jobFont, styles.white]}>PRO Mathieu</Text>
                     </View>
                 </View>
-                <View style={styles.jobTextContainer}>
+                <View style={styles.jobTextContainer}> 
                     <Text style={[styles.jobTitle, styles.jobFont, styles.white]}>co-développement Arduino</Text>
                     <View>
                         <Text style={[styles.jobFont, styles.white]}>ZEGGARI Issam, PRO Mathieu</Text>

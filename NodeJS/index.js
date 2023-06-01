@@ -1,13 +1,17 @@
 const express = require("express");
 const dbo = require("./db/db");
 const app = express();
-const port = 4444;
 const bodyParser = require('body-parser');
+const port = 4444;
 const jsonParser = bodyParser.json();
-var cors = require('cors');
-app.use(cors());
-dbo.connectToServer();
+const bcrypt = require('bcrypt');
+// Ce code va en haut de votre fichier index.js, dans vos requires
+var cors = require('cors')
 
+//celui-ci après la déclaration de la variable app
+app.use(cors())
+
+dbo.connectToServer();
 
 
 app.get("/", function (req, res) {
@@ -19,30 +23,135 @@ app.listen(port, function () {
 });
 
 
+/* index.js code before... */
 app.get("/account/list", function (req, res) {
+    //on se connecte à la DB MongoDB
     const dbConnect = dbo.getDb();
+    //premier test permettant de récupérer mes pokemons !
     dbConnect
       .collection("account")
-      .find({})
+      .find({}) // permet de filtrer les résultats
+      /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
       .toArray(function (err, result) {
         if (err) {
           res.status(400).send("Error fetching accounts!");
         } else {
           res.json(result);
         }
-      });   
-  });
-  
-app.get("/version/list", function (req, res) {
+      });
+      /*
+      Bref lisez la doc, 
+      il y a plein de manières de faire ce qu'on veut :) 
+      */
+      
+});
+
+
+app.post('/account/insert', jsonParser, async (req, res) => {
+
+    const body = req.body;
     const dbConnect = dbo.getDb();
-    dbConnect
-      .collection("version")
-      .find({})
-      .toArray(function (err, result) {
-        if (err) {
-          res.status(400).send("Error fetching versions!");
+
+    const cryptage = 10;
+    const hashedPassword = await bcrypt.hash(body.password, cryptage);
+
+    const newAccount = {
+        mail: body.mail,
+        password: hashedPassword,
+        admin: body.admin
+    };
+
+    dbConnect.collection('account').insert(newAccount);
+    res.json(newAccount);
+});
+
+
+app.put('/account/update/password', jsonParser, async (req, res) => {
+    const body = req.body;
+    const dbConnect = dbo.getDb();
+    console.log('Got body:', body);
+
+    const previousPassword = body.previousPassword;
+    const newPassword = body.newPassword;
+
+    dbConnect.collection('account').findOne({ mail: body.mail }, (err, result) => {
+        if(err) {
+            res.status(400).send("Error fetching account!");
         } else {
-          res.json(result);
+            if(result) {
+                bcrypt.compare(previousPassword, result.password, (err, isMatch) => {
+                  if(err) {
+                    res.status(400).send("Error comparing passwords!");
+                  } else {
+                    if(isMatch) {
+                        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+                            if(err) {
+                                res.status(400).send("Error hashing new password!");
+                            } else {
+                                dbConnect.collection('account').updateOne(
+                                    { mail: body.mail },
+                                    { $set: { password: hashedPassword } },
+                                    (err, result) => {
+                                        if(err) {
+                                            res.status(400).send("Error updating password!");
+                                        } else {
+                                            res.json({ message: "Password updated successfully" });
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                    } else {
+                        res.status(400).send("Incorrect previous password!");
+                    }
+                  }
+                });
+            } else {
+                res.status(400).send("No account found with the provided email!");
+            }
         }
-      });   
-  });
+    });
+});
+
+app.put('/account/update/admin', jsonParser, (req, res) => {
+    const { mail, admin } = req.body;
+    const dbConnect = dbo.getDb();
+  
+    dbConnect.collection('account').updateOne(
+      { mail: mail },
+      { $set: { admin: admin } },
+      (err, result) => {
+        if (err) {
+          res.status(400).send('Error updating admin status!');
+        } else {
+          res.status(200).send('Admin status updated successfully!');
+        }
+      }
+    );
+});
+
+app.post('/versions/insert', jsonParser, (req, res) => {
+    const { version, changelog, image } = req.body;
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const versionDate = year + "-" + month + "-" + day;
+    const dbConnect = dbo.getDb();
+  
+    const versionData = {
+      version: parseInt(version),
+      changelog: changelog,
+      date: versionDate,
+      image: image
+    };
+  
+    dbConnect.collection('versions').insertOne(versionData, (err, result) => {
+      if (err) {
+        res.status(400).send('Error inserting version data!');
+      } else {
+        res.status(200).send('Version data inserted successfully!');
+      }
+    });
+});
+  

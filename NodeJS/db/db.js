@@ -1,33 +1,27 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
-
-const connectionString = "mongodb+srv://rboisseau:14twZ0D3PJWnhwwH@penalitybox.9gz0vcq.mongodb.net/?retryWrites=true&w=majority";
-
+const { MongoClient } = require("mongodb");
+const connectionString =
+  "mongodb+srv://rboisseau:dt3qlJSiHtTTW2uN@penalitybox.ygaqqg1.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(connectionString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverApi: ServerApiVersion.v1,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-var dbConnection;
+let dbConnection;
 
 module.exports = {
-    client,
-    connectToServer: async (callback) => {
-        try {
-            var db = await client.connect();
-            console.log("Client connected")
+  connectToServer: function (callback) {
+    client.connect(function (err, db) {
+      if (err || !db) {
+        return err;
+      }
+      
+      //remplacer whatever par le nom de votre DB !
+      dbConnection = db.db("penalitybox");
+      console.log("Successfully connected to MongoDB.");
+    });
+  },
 
-            dbConnection = db.db("PenalityBox");
-
-            console.log("Successfully connected to MongoDB.");
-            return dbConnection
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
-    },
-
-    getDb: function () {
-        return dbConnection;
-    }
-}
+  getDb: function () {
+    return dbConnection;
+  },
+};
