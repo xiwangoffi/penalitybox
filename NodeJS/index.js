@@ -46,6 +46,29 @@ app.get("/account/list", function (req, res) {
       
 });
 
+app.post('/account/login', jsonParser, function (req, res) {
+  const { mail, password } = req.body;
+  const dbConnect = dbo.getDb();
+  dbConnect.collection('account').findOne({ mail }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching account!');
+    } else {
+      if (result) {
+        // Compare the entered password with the stored hashed password
+        bcrypt.compare(password, result.password, function (err, passwordMatch) {
+          if (passwordMatch) {
+            res.json({ success: true, message: 'Login successful!' });
+          } else {
+            res.json({ success: false, message: 'Invalid email or password!' });
+          }
+        });
+      } else {
+        res.json({ success: false, message: 'Invalid email or password!' });
+      }
+    }
+  });
+});
+
 
 app.post('/account/insert', jsonParser, async (req, res) => {
 
