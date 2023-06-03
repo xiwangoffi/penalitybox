@@ -41,6 +41,14 @@ const styles = {
         color: 'white',
     },
 
+    blue: {
+        color: 'blue',
+    },
+
+    underline: {
+       textDecoration: 'underline',
+    },
+
     verticalBr: {
         marginVertical: '10%',
     },
@@ -405,6 +413,23 @@ const styles = {
 /*
 
  - CSS Phone/CreditsList.js
+
+ ---------------------
+
+ - CSS Login.js
+
+*/
+
+    loginOptionContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginTop: '2%',
+    },
+
+/*
+
+ - CSS Login.js
 
 */
 

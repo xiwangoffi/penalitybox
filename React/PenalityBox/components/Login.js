@@ -12,6 +12,24 @@ const screenDimensions = Dimensions.get('screen');
 export default function LoginModal({ navigation, setIsConnected}) {
   const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordHovered, setIsPasswordHovered] = useState(false);
+  const [isSignUpHovered, setIsSignUpHovered] = useState(false);
+
+  const handlePasswordHoverEnter = () => {
+    setIsPasswordHovered(true);
+  };
+
+  const handlePasswordHoverLeave = () => {
+    setIsPasswordHovered(false);
+  };
+
+  const handleSignUpHoverEnter = () => {
+    setIsSignUpHovered(true);
+  };
+
+  const handleSignUpHoverLeave = () => {
+    setIsSignUpHovered(false);
+  };
 
   const [dimensions, setDimensions] = useState({
     window: windowDimensions,
@@ -76,15 +94,24 @@ export default function LoginModal({ navigation, setIsConnected}) {
           ></TextInput>
         </View>
         <View style={[styles.validateButton, styles.boxShadow]}>
-        <Button
-            title="Valider"
-            color="grey"
-            onPress={() => {
-                validateCredentials();
-                navigation.navigate('Accueil');
-            }}
-        />
+          <Button
+              title="Valider"
+              color="grey"
+              onPress={() => {
+                  validateCredentials();
+                  navigation.navigate('Accueil');
+              }}
+          />
 
+        </View>
+        <View style={styles.loginOptionContainer}>
+          <View>
+              <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} onMouseEnter={handlePasswordHoverEnter} onMouseLeave={handlePasswordHoverLeave}>Mot de passe oublié ?</Text>
+          </View>
+          <View style={{marginHorizontal: '50%'}}></View>
+          <View>
+              <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} onMouseEnter={handleSignUpHoverEnter} onMouseLeave={handleSignUpHoverLeave}>S'inscrire</Text>
+          </View>
         </View>
         <Footer navigation={navigation} />
       </View>

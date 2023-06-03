@@ -10,7 +10,7 @@ import AppliScreen from './screens/Appli';
 import VersionsScreen from './screens/Versions';
 import AdminScreen from './screens/Admin';
 import CreditsScreen from './screens/Credits';
-import LoginModal from '../components/LoginModal';
+import LoginModal from '../components/Login';
 
 // Screen names
 const homeName = 'Accueil';
