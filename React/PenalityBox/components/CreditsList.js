@@ -27,7 +27,7 @@ export default function creditsList() {
             </View>
             <View style={styles.jobTitleContainer}>
                 <View style={styles.jobTextContainer}>
-                    <Text style={[styles.jobTitle, styles.jobFont, styles.white]}>Concepteur et co-réalisation / Directeur de développement</Text>
+                    <Text style={[styles.jobTitle, styles.jobFont, styles.white]}>Concepteur et Directeur de développement</Text>
                     <View>
                         <Text style={[styles.jobFont, styles.white]}>M. Bardi Jean-Marc</Text>
                     </View>
@@ -57,7 +57,7 @@ export default function creditsList() {
                     </View>
                 </View>
                 <View style={styles.jobTextContainer}>
-                    <Text style={[styles.jobTitle, styles.jobFont, styles.white]}>Site internet</Text>
+                    <Text style={[styles.jobTitle, styles.jobFont, styles.white]}>Site internet - React Native / NodeJS</Text>
                     <View>
                         <Text style={[styles.jobFont, styles.white]}>BOISSEAU Romain</Text>
                     </View>

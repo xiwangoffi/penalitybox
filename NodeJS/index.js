@@ -46,6 +46,24 @@ app.get("/account/list", function (req, res) {
       
 });
 
+app.get('/account/admin/:mail', function (req, res) {
+  const { mail } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('account').findOne({ mail }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching account!');
+    } else {
+      if (result) {
+        res.json({ isAdmin: result.admin });
+      } else {
+        res.status(400).send('Account not found!');
+      }
+    }
+  });
+});
+
+
 app.post('/account/login', jsonParser, function (req, res) {
   const { mail, password } = req.body;
   const dbConnect = dbo.getDb();
@@ -81,7 +99,7 @@ app.post('/account/insert', jsonParser, async (req, res) => {
     const newAccount = {
         mail: body.mail,
         password: hashedPassword,
-        admin: body.admin
+        admin: false
     };
 
     dbConnect.collection('account').insert(newAccount);
@@ -152,6 +170,24 @@ app.put('/account/update/admin', jsonParser, (req, res) => {
       }
     );
 });
+
+app.delete('/account/delete', jsonParser, async (req, res) => {
+  const mail = req.body.mail;
+  const dbConnect = dbo.getDb();
+
+  try {
+    const result = await dbConnect.collection('account').deleteOne({ mail: mail });
+    
+    if (result.deletedCount === 1) {
+      res.json({ message: "Account deleted successfully" });
+    } else {
+      res.status(400).send("No account found with the provided email");
+    }
+  } catch (error) {
+    res.status(500).send("Error deleting account: " + error.message);
+  }
+});
+
 
 app.post('/versions/insert', jsonParser, (req, res) => {
     const { version, changelog, image } = req.body;

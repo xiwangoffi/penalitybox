@@ -3,17 +3,20 @@ import { View, TextInput, Button, Dimensions, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
 import styles from '../styles/styles';
+import SignIn from '../navigation/screens/SignIn';
 
 import axios from 'axios';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function LoginModal({ navigation, setIsConnected}) {
+export default function LoginModal({ navigation, setIsConnected, checkAdminStatus, handleEmailChange }) {
   const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordHovered, setIsPasswordHovered] = useState(false);
   const [isSignUpHovered, setIsSignUpHovered] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [isValidate, setIsValidate] = useState(false);
 
   const handlePasswordHoverEnter = () => {
     setIsPasswordHovered(true);
@@ -46,12 +49,28 @@ export default function LoginModal({ navigation, setIsConnected}) {
       setIsConnected(success);
       if (success) {
         console.log('User connected successfully');
+        checkAdminStatus(mail);
+        handleEmailChange(mail);
       } else {
         console.log('User authentication failed');
       }
     } catch (error) {
       console.error('Error validating credentials:', error.message);
       setIsConnected(false);
+    }
+  };
+
+  const insertAccount = async () => {
+    try {
+      const response = await axios.post('http://localhost:4444/account/insert', {
+        mail,
+        password,
+      });
+      console.log(response.data);
+      setIsValidate(true);
+      // You can add any additional logic here after inserting the account
+    } catch (error) {
+      console.error('Error inserting account:', error.message);
     }
   };
 
@@ -93,25 +112,46 @@ export default function LoginModal({ navigation, setIsConnected}) {
             onChangeText={(text) => setPassword(text)}
           ></TextInput>
         </View>
+        <View>
+            <Text style={styles.green}>{isValidate && 'Compte créé avec succès !' }</Text>
+        </View>
         <View style={[styles.validateButton, styles.boxShadow]}>
           <Button
-              title="Valider"
-              color="grey"
-              onPress={() => {
-                  validateCredentials();
-                  navigation.navigate('Accueil');
-              }}
+            title="Valider"
+            color="grey"
+            onPress={() => { showSignIn ? [insertAccount()] : [validateCredentials()] }}
           />
-
         </View>
-        <View style={styles.loginOptionContainer}>
-          <View>
-              <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} onMouseEnter={handlePasswordHoverEnter} onMouseLeave={handlePasswordHoverLeave}>Mot de passe oublié ?</Text>
-          </View>
-          <View style={{marginHorizontal: '50%'}}></View>
-          <View>
-              <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} onMouseEnter={handleSignUpHoverEnter} onMouseLeave={handleSignUpHoverLeave}>S'inscrire</Text>
-          </View>
+        <View style={showSignIn ? [styles.loginOptionContainer, {flexDirection: 'row'}] : styles.loginOptionContainer}>
+          {showSignIn ? (
+            <View style={showSignIn ? [styles.loginOptionContainer, {flexDirection: 'row'}] : styles.loginOptionContainer}>
+              <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} 
+              onMouseEnter={handleSignUpHoverEnter} 
+              onMouseLeave={handleSignUpHoverLeave}
+              onPress={() => {setShowSignIn(false);}}>
+                Se connecter
+              </Text>
+            </View>
+          ) : (
+            <View style={showSignIn ? styles.loginOptionContainer : [styles.loginOptionContainer, {flexDirection: 'row'}] }>
+              <View>
+                <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} 
+                onMouseEnter={handlePasswordHoverEnter} 
+                onMouseLeave={handlePasswordHoverLeave}>
+                  Mot de passe oublié ?
+                </Text>
+              </View>
+              <View style={{ marginHorizontal: '50%' }}></View>
+              <View>
+                <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} 
+                onMouseEnter={handleSignUpHoverEnter} 
+                onMouseLeave={handleSignUpHoverLeave}
+                onPress={() => {setShowSignIn(true);}}>
+                  S'inscrire
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
         <Footer navigation={navigation} />
       </View>

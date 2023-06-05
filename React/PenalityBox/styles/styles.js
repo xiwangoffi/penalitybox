@@ -37,14 +37,6 @@ const styles = {
         justifyContent: 'center',
     },
 
-    white: {
-        color: 'white',
-    },
-
-    blue: {
-        color: 'blue',
-    },
-
     underline: {
        textDecoration: 'underline',
     },
@@ -55,7 +47,7 @@ const styles = {
 
 
     br: {
-        marginTop: '5%',
+        marginTop: '3%',
     },
 
     iconContainer: {
@@ -63,6 +55,34 @@ const styles = {
         alignItems: 'center',
         marginBottom: 10,
     },
+
+    /*
+
+     - Colors
+
+    */
+
+     white: {
+        color: 'white',
+    },
+
+    blue: {
+        color: 'blue',
+    },
+
+    green: {
+        color: 'lightgreen',
+    },
+
+    red: {
+        color: 'red',
+    },
+
+    /*
+
+     - Colors
+
+    */
 
 /*
 
@@ -421,7 +441,6 @@ const styles = {
 */
 
     loginOptionContainer: {
-        flexDirection: 'row', 
         alignItems: 'center', 
         justifyContent: 'center', 
         marginTop: '2%',
