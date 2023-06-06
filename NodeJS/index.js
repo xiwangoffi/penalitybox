@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const port = 4444;
 const jsonParser = bodyParser.json();
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 // Ce code va en haut de votre fichier index.js, dans vos requires
 var cors = require('cors')
 
@@ -99,10 +101,12 @@ app.post('/account/insert', jsonParser, async (req, res) => {
     const newAccount = {
         mail: body.mail,
         password: hashedPassword,
-        admin: false
+        admin: false,
+        resetToken: null,
+        resetTokenExpires: null
     };
 
-    dbConnect.collection('account').insert(newAccount);
+    dbConnect.collection('account').insertOne(newAccount);
     res.json(newAccount);
 });
 
@@ -213,4 +217,111 @@ app.post('/versions/insert', jsonParser, (req, res) => {
       }
     });
 });
+
+
+
+
+
+
+
+
+app.post('/account/forgot-password', jsonParser, async (req, res) => {
+  const { mail } = req.body;
+  const dbConnect = dbo.getDb();
   
+  try {
+    // Generate a unique reset token
+    const resetToken = generateResetToken();
+    
+    // Set the token expiration time (e.g., 1 hour from the current time)
+    const resetTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000);
+    
+    // Update the user account with the reset token and expiration time
+    const result = await dbConnect.collection('account').updateOne(
+      { mail: mail },
+      { $set: { resetToken, resetTokenExpires } }
+    );
+    
+    if (result.modifiedCount === 1) {
+      // Send the reset token to the user (via email)
+      sendResetTokenEmail(mail, resetToken);
+      
+      res.json({ message: 'Reset token sent successfully' });
+    } else {
+      res.status(400).send('No account found with the provided email');
+    }
+  } catch (error) {
+    res.status(500).send('Error generating reset token: ' + error.message);
+  }
+});
+
+function generateResetToken() {
+  // Generate a random token
+  const tokenLength = 16;
+  const token = crypto.randomBytes(tokenLength).toString('hex');
+  
+  // Return the generated reset token
+  return token;
+}
+
+function sendResetTokenEmail(mail, resetToken) {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: 'romain.boisseau.18@gmail.com',
+      pass: 'itxxguosuxypxvqo',
+    },
+  });
+
+  const mailOptions = {
+    from: 'romain.boisseau.18@gmail.com',
+    to: mail,
+    subject: 'Rénitialisation de votre mot de passe',
+    text: `Pour rénitialiser votre mot de passe, utilisez le jeton suivant: \n${resetToken}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending reset token email:', error);
+    } else {
+      console.log('Reset token email sent:', info.response);
+    }
+  });
+}
+
+
+app.post('/account/reset-password', jsonParser, async (req, res) => {
+  const { mail, resetToken, newPassword } = req.body;
+  const dbConnect = dbo.getDb();
+
+  try {
+    // Find the user with the provided email and reset token
+    const user = await dbConnect.collection('account').findOne({ mail, resetToken });
+
+    if (!user) {
+      return res.status(400).send('Invalid or expired reset token');
+    }
+
+    if (!newPassword) {
+      return res.status(400).send('New password cannot be empty');
+    }
+
+    // Generate a new hashed password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    const result = await dbConnect.collection('account').updateOne(
+      { mail, resetToken },
+      { $set: { password: hashedPassword, resetToken: null, resetTokenExpires: null } }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.json({ success: true, message: 'Password reset successful' });
+    } else {
+      res.json({ success: false, message: 'Failed to reset password' });
+    }
+  } catch (error) {
+    res.status(500).send('Error resetting password: ' + error.message);
+  }
+});
+

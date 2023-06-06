@@ -45,6 +45,13 @@ const styles = {
         marginVertical: '10%',
     },
 
+    textShadow: {
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+    },
+
+    bold: {
+        fontWeight: 'bold',
+    },
 
     br: {
         marginTop: '3%',
