@@ -25,13 +25,30 @@ export default function VersionScreen({navigation}) {
     if(dimensions.window.height >= dimensions.screen.width) {
         return(
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Text onPress={() => Alert.alert('Verion Screen')}
-                style={{ fontSize: 26, fontWeight: "bold" }}>Version Screen</Text>
+                <Text style={{ fontSize: 26, fontWeight: "bold" }}>Version Screen</Text>
             </View>
         )
     } else {
         return(
-            <Text>qwsexdrcftyguh</Text>
+            <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
+                <View style={[styles.versionContainer, styles.boxShadow]}>
+                    <View style={styles.versionTextContainer}>
+                        <View style={[styles.versionNumberContainer, styles.justifyContent]}>
+                            <Text style={[styles.white, styles.bold, styles.title]}>Version 1</Text>
+                        </View>
+                        <View style={styles.versionChangelogContainer}>
+
+                        </View>
+                        <View style={styles.versionDateContainer}>
+
+                        </View>
+                    </View>
+                    <View style={styles.versionImageContainer}>
+
+                    </View>
+                </View>
+                <Footer navigation={navigation} />
+            </View>
         )
     }
 }

@@ -4,33 +4,40 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
 import styles from '../styles/styles';
 
-
-import axios from 'axios';
+import axios from 'axios'; //axios library for nodejs requests
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function LoginModal({ navigation, setIsConnected, checkAdminStatus, handleEmailChange }) {
-  const [mail, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function Login({ navigation, setIsConnected, checkAdminStatus, handleEmailChange }) {
+  const [mail, setEmail] = useState(''); // user mail
+  const [password, setPassword] = useState(''); //user password
 
-  const [isPasswordHovered, setIsPasswordHovered] = useState(false);
-  const [isSignUpHovered, setIsSignUpHovered] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(false);
+  const [isPasswordHovered, setIsPasswordHovered] = useState(false); //handle forgot password text hover
+  const [isSignUpHovered, setIsSignUpHovered] = useState(false); //handle sign-in text hover
+  const [showSignIn, setShowSignIn] = useState(false); //handle sign-in screen
 
-  const [accountCreatedSuccessfully, setIsAccountCreatedSuccessfully] = useState(false);
+  const [accountCreatedSuccessfully, setIsAccountCreatedSuccessfully] = useState(false); //handle account creation text
 
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [hasToChangePassword, setHasToChangePassword] = useState(false);
-  const [failedResettingPassword, setFailedResettingPassword] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false); //handle forgot password screen / text
+  const [hasToChangePassword, setHasToChangePassword] = useState(false); //handle second step of forgot password screen / text
+  const [failedResettingPassword, setFailedResettingPassword] = useState(false); //handle failed resetting password text
+  const [isNoEmailProvided, setIsNoEmailProvided] = useState(false); //handle no email provided text
 
-  const [isEmptyPasswordError, setIsEmptyPasswordError] = useState(false);
-  const [isEmptyResetTokenError, setIsEmptyResetTokenError] = useState(false);
-  const [isResetWrong, setIsResetWrong] = useState(false);
+  const [isEmptyPasswordError, setIsEmptyPasswordError] = useState(false); //handle no password text
+  const [isEmptyResetTokenError, setIsEmptyResetTokenError] = useState(false); //handle no token text
+  const [isResetWrong, setIsResetWrong] = useState(false); //handle no token / password text
+  const [isResetSuccess, setIsResetSuccess] = useState(false); //handle reset success text
 
-  const [resetToken, setResetToken] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [isLoginEmailEmpty, setIsLoginEmailEmpty] = useState(false); //handle login no email text
+  const [isLoginPasswordEmpty, setIsLoginPasswordEmpty] = useState(false); //handle login no password text
+  const [isLoginEmpty, setIsLoginEmpty] = useState(false); //handle login no email and password text
 
+  const [resetToken, setResetToken] = useState(''); //handle reset token
+  const [newPassword, setNewPassword] = useState(''); //handle new user password
+
+
+  //Hover method
   const handlePasswordHoverEnter = () => {
     setIsPasswordHovered(true);
   };
@@ -52,7 +59,13 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
     screen: screenDimensions,
   });
 
-  const sendResetTokenRequest = async () => {
+  const sendResetTokenRequest = async () => { //Reset token handle
+
+    if(!mail) { //Troubleshooting
+      setIsNoEmailProvided(true);
+      return;
+    }
+
     try {
       const response = await axios.post(`http://localhost:4444/account/forgot-password`, { mail });
       console.log(response.data);
@@ -67,9 +80,9 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
   };
   
 
-  const resetPasswordRequest = async () => {
+  const resetPasswordRequest = async () => { //Reset password method
 
-    if(!newPassword && !resetToken) {
+    if(!newPassword && !resetToken) { //Troubleshooting
       setIsEmptyPasswordError(false);
       setIsEmptyResetTokenError(false);
       setIsResetWrong(true);
@@ -97,6 +110,7 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
         console.log('Password succesfully reset');
         setIsEmptyPasswordError(false);
         setHasToChangePassword(false);
+        setIsResetSuccess(true);
       } else {
         console.log('Failed to reset password:', message);
         setFailedResettingPassword(true);
@@ -111,7 +125,25 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
     }
   };
 
-  const validateCredentials = async () => {
+  const validateCredentials = async () => { //Log-in method
+
+    if(!mail && !password) { //Troubleshooting
+      setIsLoginEmpty(true);
+      setIsLoginEmailEmpty(false);
+      setIsLoginPasswordEmpty(false);
+      return;
+    } else if(!mail) {
+      setIsLoginEmailEmpty(true);
+      setIsLoginEmpty(false);
+      setIsLoginPasswordEmpty(false);
+      return;
+    } else if(!password) {
+      setIsLoginPasswordEmpty(true);
+      setIsLoginEmailEmpty(false);
+      setIsLoginEmpty(false);
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:4444/account/login', {
         mail,
@@ -120,6 +152,10 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
       const { success } = response.data;
       setIsConnected(success);
       if (success) {
+        setIsLoginEmailEmpty(false);
+        setIsLoginPasswordEmpty(false);
+        setIsLoginEmpty(false);
+        setIsResetSuccess(false);
         console.log('User connected successfully');
         checkAdminStatus(mail);
         handleEmailChange(mail);
@@ -132,13 +168,34 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
     }
   };
 
-  const insertAccount = async () => {
+  const insertAccount = async () => { //Account creation method
+
+    if(!mail && !password) { //Troubleshooting
+      setIsLoginEmpty(true);
+      setIsLoginEmailEmpty(false);
+      setIsLoginPasswordEmpty(false);
+      return;
+    } else if(!mail) {
+      setIsLoginEmailEmpty(true);
+      setIsLoginEmpty(false);
+      setIsLoginPasswordEmpty(false);
+      return;
+    } else if(!password) {
+      setIsLoginPasswordEmpty(true);
+      setIsLoginEmailEmpty(false);
+      setIsLoginEmpty(false);
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:4444/account/insert', {
         mail,
         password,
       });
       console.log(response.data);
+      setIsLoginEmailEmpty(false);
+      setIsLoginPasswordEmpty(false);
+      setIsLoginEmpty(false);
       setIsAccountCreatedSuccessfully(true);
       setShowSignIn(false);
     } catch (error) {
@@ -146,7 +203,7 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { //Set-up screen width/height to handle responsive
     const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
       setDimensions({ window, screen });
     });
@@ -155,15 +212,31 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
 
   if (dimensions.window.height >= dimensions.screen.width) {
     return (
-      //Gestion téléphone
+      //Handle phone log-in screen
       <View>
         <Text>Login Screen for Phone</Text>
       </View>
     );
   } else {
     return (
-      //Gestion PC
+      //Handle PC log-in screen
       <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
+        <View style={styles.brBottom}>
+          <Text style={[
+            styles.white, 
+            styles.bold, 
+            styles.title, 
+            styles.textAlign
+          ]}>
+          {showSignIn
+            ? 'Inscription'
+            : isForgotPassword
+            ? 'Envoi jeton de réinitialisation'
+            : hasToChangePassword
+            ? 'Réinitialisation mot de passe'
+            : 'Connexion'}
+          </Text>
+        </View>
         <View style={styles.iconContainer}>
           <Icon name="at" size={20} color="lightgrey" />
           <TextInput
@@ -174,7 +247,7 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
             onChangeText={(text) => setEmail(text)}
           ></TextInput>
         </View>
-        {!isForgotPassword && !hasToChangePassword ? (
+        {!isForgotPassword && !hasToChangePassword ? ( //Input display " mot de passe " cancelled if user is in option reset password
           <View style={styles.iconContainer}>
             <Icon name="lock" size={20} color="lightgrey" />
             <TextInput
@@ -186,7 +259,7 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
             ></TextInput>
           </View>
         ) : null}
-        {hasToChangePassword ? ( //qwsedrftgyhusedrftgyhujied-rfètgyhujie-drèftyguhijok'edrfyhui'de(rf-tgyèhuji)
+        {hasToChangePassword ? ( //Handle password reset
           <View>
             <View style={styles.iconContainer}>
               <Icon name="key" size={20} color="lightgrey" />
@@ -195,7 +268,7 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
                 value={resetToken} 
                 onChangeText={setResetToken} />
             </View>
-            <View style={styles.iconContainer}>
+            <View style={styles.iconContainer}> 
               <Icon name="lock" size={20} color="lightgrey" />
               <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} 
                 placeholder='Nouveau mot de passe' 
@@ -204,12 +277,12 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
                 secureTextEntry />
             </View>
             <View>
-              <Text style={ [ styles.red, styles.textShadow ] }>
-                {isResetWrong 
+              <Text style={ [ styles.red, styles.textShadow, styles.textAlign ] }>
+                {isResetWrong //Si aucun champ n'est rempli
                   ? 'Veuillez remplir les 2 champs !'
-                  : isEmptyPasswordError
+                  : isEmptyPasswordError //Si le mot de passe est vide
                   ? 'Le mot de passe ne peut pas être vide !'
-                  : isEmptyResetTokenError
+                  : isEmptyResetTokenError //Si le jeton est vide
                   ? 'Le jeton de réinitialisation ne peut pas être vide !'
                   : null}
               </Text>
@@ -218,13 +291,28 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
         ) : null}
         <View>
           <Text style={[
-            accountCreatedSuccessfully ? [styles.green, styles.textShadow] : null,
-            failedResettingPassword ? [styles.red, styles.bold, styles.textShadow] : null,
+            accountCreatedSuccessfully ||
+            isResetSuccess ? [styles.green, styles.textShadow] : null,
+            failedResettingPassword || 
+            isNoEmailProvided || 
+            isLoginEmailEmpty || 
+            isLoginPasswordEmpty || 
+            isLoginEmpty ? [styles.red, styles.bold, styles.textShadow] : null,
           ]}>
             {accountCreatedSuccessfully
               ? 'Compte créé avec succès!'
               : failedResettingPassword
               ? 'Échec réinitialisation du mot de passe ! Veuillez générer un nouveau jeton'
+              : isNoEmailProvided
+              ? 'Veuillez mettre votre email'
+              : isLoginEmailEmpty
+              ? 'Veuillez renseigner un email'
+              : isLoginPasswordEmpty
+              ? 'Veuillez renseigner un mot de passe'
+              : isLoginEmpty
+              ? 'Veuillez renseigner un mot de passe et un mail'
+              : isResetSuccess
+              ? 'Mot de passe changé avec succès'
               : null}
           </Text>
         </View>
@@ -256,12 +344,17 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
                 setIsAccountCreatedSuccessfully(false); 
                 setFailedResettingPassword(false);
                 setHasToChangePassword(false);
+                setIsNoEmailProvided(false);
+                setIsForgotPassword(false);
+                setIsLoginEmpty(false);
+                setIsLoginEmailEmpty(false);
+                setIsLoginPasswordEmpty(false);
               }}>
                 Revenir au menu de connexion
               </Text>
             </View>
           ) : null}
-          { !isForgotPassword && !showSignIn && !hasToChangePassword ? (
+          { !isForgotPassword && !showSignIn && !hasToChangePassword ? ( //Displaying options " mot de passe oublié " and " s'incrire " IF user isn't in option to change password or sign-in
             <View style={showSignIn ? styles.loginOptionContainer : [styles.loginOptionContainer, {flexDirection: 'row'}] }>
               <View>
                 <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} 
@@ -270,6 +363,10 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
                 onPress={() => {
                   setIsForgotPassword(true);
                   setIsAccountCreatedSuccessfully(false);
+                  setIsLoginEmpty(false);
+                  setIsLoginEmailEmpty(false);
+                  setIsLoginPasswordEmpty(false);
+                  setIsResetSuccess(false);
                   }}>
                   Mot de passe oublié ?
                 </Text>
@@ -282,6 +379,10 @@ export default function LoginModal({ navigation, setIsConnected, checkAdminStatu
                 onPress={() => {
                   setShowSignIn(true);
                   setIsAccountCreatedSuccessfully(false);
+                  setIsLoginEmpty(false);
+                  setIsLoginEmailEmpty(false);
+                  setIsLoginPasswordEmpty(false);
+                  setIsResetSuccess(false);
                 }}>
                   S'inscrire
                 </Text>

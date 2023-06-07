@@ -57,12 +57,24 @@ const styles = {
         marginTop: '3%',
     },
 
+    brBottom: {
+        marginBottom: '1%',
+    },
+
     iconContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
     },
 
+    title: {
+        fontSize: 24,
+    },
+
+    verticalAlign: {
+        verticalAlign: 'center',
+    },
+    
     /*
 
      - Colors
@@ -456,6 +468,69 @@ const styles = {
 /*
 
  - CSS Login.js
+
+ ----------------------
+
+ - CSS Versions.js
+
+*/
+
+    /*
+
+     - Container
+
+    */
+
+    versionContainer: {
+        width: '60%',
+        height: '70%',
+        flexDirection: 'row',
+        borderRadius: 7,
+        borderColor: '#736C6C',
+    },
+
+    versionTextContainer: {
+        width: '50%',
+        height: '100%',
+        backgroundColor: 'yellow',
+    },
+
+    versionImageContainer: {
+        width: '50%',
+        height: '100%',
+        backgroundColor: 'black',
+    },
+
+    versionNumberContainer: {
+        width: '100%',
+        height: '20%',
+        marginLeft: '1%',
+        backgroundColor: '#FF33FF',
+    },
+
+    versionChangelogContainer: {
+        width: '100%',
+        height: '60%',
+        marginLeft: '1%',
+        backgroundColor: 'brown',
+    },
+
+    versionDateContainer: {
+        width: '100%',
+        height: '20%',
+        marginLeft: '1%',
+        backgroundColor: 'blue',
+    },
+
+    /*
+
+     - Container
+
+    */
+
+/*
+
+ - CSS Versions.js
 
 */
 

@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
 import styles from '../../styles/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
+import axios from 'axios'; //axios library for nodejs requests
 
 export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
   const [mail, setEmail] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState(''); //user old password
+  const [newPassword, setNewPassword] = useState(''); // user new password
 
-  const [isValidate, setIsValidate] = useState(false);
-  const [isSignOutHovered, setIsSignOutHovered] = useState(false);
-  const [isDeleteAccountHovered, setIsDeleteAccountHovered] = useState(false);
+  const [isValidate, setIsValidate] = useState(false); //handle password update validation
+  const [isSignOutHovered, setIsSignOutHovered] = useState(false); //handle sign-out hover
+  const [isDeleteAccountHovered, setIsDeleteAccountHovered] = useState(false); //handle delete account hover
 
+  const [isUpdateEmpty, setIsUpdateEmpty] = useState(false); //handle no old password and new password text
+  const [isUpdateOldPasswordEmpty, setIsUpdateOldPasswordEmpty] = useState(false); //handle no old password text
+  const [isUpdateNewPasswordEmpty, setIsUpdateNewPasswordEmpty] = useState(false); //handle no new password text
+
+  //Hover methods
   const handleSignOutHoverEnter = () => {
     setIsSignOutHovered(true);
   };
@@ -29,7 +34,25 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
     setIsDeleteAccountHovered(false);
   };
 
-  const updatePassword = async () => {
+  const updatePassword = async () => { //Update password request
+
+    if(!oldPassword && !newPassword) { //Troubleshooting
+      setIsUpdateEmpty(true);
+      setIsUpdateNewPasswordEmpty(false);
+      setIsUpdateOldPasswordEmpty(false);
+      return;
+    } else if(!oldPassword) {
+      setIsUpdateEmpty(false);
+      setIsUpdateNewPasswordEmpty(false);
+      setIsUpdateOldPasswordEmpty(true);
+      return;
+    } else if(!newPassword) {
+      setIsUpdateEmpty(false);
+      setIsUpdateNewPasswordEmpty(true);
+      setIsUpdateOldPasswordEmpty(false);
+      return;
+    }
+
     try {
       const response = await axios.put('http://localhost:4444/account/update/password', {
         mail: userEmail,
@@ -92,7 +115,21 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
         />
       </View>
       <View>
-        <Text style={isValidate && styles.green}>{isValidate ? 'Mot de passe changé avec succès !' : ''}</Text>
+        <Text style={[
+          isValidate ? [styles.green, styles.bold, styles.textShadow] : null,
+          isUpdateEmpty ||
+          isUpdateNewPasswordEmpty ||
+          isUpdateOldPasswordEmpty ? [styles.red, styles.bold, styles.textShadow] : null,
+        ]}>{isValidate 
+            ? 'Mot de passe changé avec succès !'
+            : isUpdateEmpty
+            ? 'Veuillez renseigner votre ancien et nouveau mot de passe'
+            : isUpdateOldPasswordEmpty
+            ? 'Veuillez renseigner votre ancien mot de passe'
+            : isUpdateNewPasswordEmpty
+            ? 'Veuillez renseigner votre nouveau mot de passe'
+            : null}
+        </Text>
       </View>
       <View style={[styles.validateButton, styles.boxShadow]}>
         <Button title="Valider" color="grey" onPress={updatePassword} />
