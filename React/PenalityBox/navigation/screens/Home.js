@@ -43,7 +43,7 @@ export default function HomeScreen({navigation}) {
                         Le boîtier est également télécommandable.
                         </Text>
                         <View style={styles.gifContainer}>
-                            <Image source={require('../../assets/gif/penalityBox.gif')} resizeMode='contain' style={styles.ownerNamesImage} alt='PenalityBox gif demo'/>
+                            <Image source={require('../../assets/gif/penalityBox.gif')} resizeMode='contain' style={styles.penalityBoxGIF} alt='PenalityBox gif demo'/>
                         </View>
                     </View>
                     <View style={styles.imageContainer}>

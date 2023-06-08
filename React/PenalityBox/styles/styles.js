@@ -57,6 +57,14 @@ const styles = {
         marginTop: '3%',
     },
 
+    mediumBr: {
+        marginTop: '2%',
+    },
+
+    littleBr: {
+        marginTop: '1%',
+    },
+
     brBottom: {
         marginBottom: '1%',
     },
@@ -73,6 +81,14 @@ const styles = {
 
     verticalAlign: {
         verticalAlign: 'center',
+    },
+
+    flexOne: {
+        flex: 1,
+    },
+
+    row: {
+        flexDirection: 'row',
     },
     
     /*
@@ -169,7 +185,7 @@ const styles = {
         height: '528',
     },
 
-    ownerNamesImage: {
+    penalityBoxGIF: {
         height: '70%',
         width: '70%',
     },
@@ -492,34 +508,37 @@ const styles = {
     versionTextContainer: {
         width: '50%',
         height: '100%',
-        backgroundColor: 'yellow',
     },
 
     versionImageContainer: {
         width: '50%',
         height: '100%',
-        backgroundColor: 'black',
     },
 
     versionNumberContainer: {
         width: '100%',
-        height: '20%',
-        marginLeft: '1%',
-        backgroundColor: '#FF33FF',
+        height: '10%',
+        marginLeft: '2%',
+        marginRight: '1%',
+        flexDirection: 'row',
     },
 
     versionChangelogContainer: {
         width: '100%',
-        height: '60%',
-        marginLeft: '1%',
-        backgroundColor: 'brown',
+        height: '80%',
+        marginLeft: '2%',
+        marginRight: '1%',
     },
 
     versionDateContainer: {
         width: '100%',
-        height: '20%',
-        marginLeft: '1%',
-        backgroundColor: 'blue',
+        height: '10%',
+        marginLeft: '2%',
+        marginRight: '1%',
+    },
+
+    versionPickerPos: {
+        marginLeft: '2%',
     },
 
     /*
@@ -531,6 +550,57 @@ const styles = {
 /*
 
  - CSS Versions.js
+
+ -------------------------
+
+ - CSS Admin.js
+
+*/
+
+    /*
+
+     - Container
+
+    */
+
+     recentUsersContainer: {
+        width: '15%',
+        height: '22%',
+        marginTop: '2%',
+        marginLeft: '2%',
+        backgroundColor: '#898989',
+     },
+
+     /*
+
+     - Container
+
+     */
+
+    divider: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+        marginVertical: 10,
+        marginLeft: '5%',
+        marginRight: '5%',
+    },
+
+    verticalDivider: {
+        borderRightWidth: 1,
+        borderRightColor: 'black',
+    },
+
+    adminToggle: {
+        color: 'red'
+    },
+
+    adminToggleActive: {
+        color: 'lightgreen',
+    },
+
+/*
+
+ - CSS Admin.js
 
 */
 

@@ -65,6 +65,24 @@ app.get('/account/admin/:mail', function (req, res) {
   });
 });
 
+app.get('/account/admin/get/all', (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('account').find().toArray((err, accounts) => {
+    if (err) {
+      console.error('Error fetching user accounts:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching user accounts' });
+    }
+
+    const userAccounts = accounts.map((account) => ({ mail: account.mail, admin: account.admin }));
+
+    res.json({ accounts: userAccounts });
+  });
+});
+
+
+
+
 
 app.post('/account/login', jsonParser, function (req, res) {
   const { mail, password } = req.body;
@@ -108,6 +126,7 @@ app.post('/account/insert', jsonParser, async (req, res) => {
     admin: false,
     resetToken: null,
     resetTokenExpires: null,
+    createdAt: new Date(),
   };
 
   dbConnect.collection('account').insertOne(newAccount);
@@ -197,6 +216,26 @@ app.delete('/account/delete', jsonParser, async (req, res) => {
   }
 });
 
+app.get('/account/recent', async (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  try {
+    // Retrieve the recent users from the database
+    const recentUsers = await dbConnect.collection('account')
+      .find()
+      .sort({ createdAt: -1 }) // Sort by creation timestamp in descending order
+      .limit(5)
+      .toArray();
+
+    // Return the limited recent users as the response
+    res.json({ users: recentUsers });
+  } catch (error) {
+    console.error('Error fetching recent users:', error);
+    res.status(500).json({ error: 'An error occurred while fetching recent users' });
+  }
+});
+
+
 
 app.post('/versions/insert', jsonParser, (req, res) => {
     const { version, changelog, image } = req.body;
@@ -208,7 +247,7 @@ app.post('/versions/insert', jsonParser, (req, res) => {
     const dbConnect = dbo.getDb();
   
     const versionData = {
-      version: parseInt(version),
+      version: version,
       changelog: changelog,
       date: versionDate,
       image: image
@@ -223,7 +262,70 @@ app.post('/versions/insert', jsonParser, (req, res) => {
     });
 });
 
+app.get('/versions', function (req, res) {
+  const dbConnect = dbo.getDb();
 
+  dbConnect.collection('versions').find({}, { projection: { _id: 0, version: 1 } }).toArray(function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching versions!');
+    } else {
+      const versions = result.map((item) => item.version);
+      res.json({ versions });
+    }
+  });
+});
+
+
+app.get('/versions/date/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ date: result.date });
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
+
+app.get('/versions/changelog/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ changelog: result.changelog });
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
+
+app.get('/versions/image/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ image: result.image });
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
 
 
 

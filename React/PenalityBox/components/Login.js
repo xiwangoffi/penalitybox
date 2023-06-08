@@ -333,9 +333,9 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
             }}
           />
         </View>
-        <View style={showSignIn ? [styles.loginOptionContainer, {flexDirection: 'row'}] : styles.loginOptionContainer}>
+        <View style={showSignIn ? [styles.loginOptionContainer, styles.row] : styles.loginOptionContainer}>
           {showSignIn || isForgotPassword || hasToChangePassword ? (
-            <View style={showSignIn ? [styles.loginOptionContainer, {flexDirection: 'row'}] : styles.loginOptionContainer}>
+            <View style={showSignIn ? [styles.loginOptionContainer, styles.row] : styles.loginOptionContainer}>
               <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} 
               onMouseEnter={handleSignUpHoverEnter} 
               onMouseLeave={handleSignUpHoverLeave}
@@ -355,7 +355,7 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
             </View>
           ) : null}
           { !isForgotPassword && !showSignIn && !hasToChangePassword ? ( //Displaying options " mot de passe oublié " and " s'incrire " IF user isn't in option to change password or sign-in
-            <View style={showSignIn ? styles.loginOptionContainer : [styles.loginOptionContainer, {flexDirection: 'row'}] }>
+            <View style={showSignIn ? styles.loginOptionContainer : [styles.loginOptionContainer, styles.row] }>
               <View>
                 <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} 
                 onMouseEnter={handlePasswordHoverEnter} 

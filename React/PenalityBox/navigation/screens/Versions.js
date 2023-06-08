@@ -1,54 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, Dimensions, Picker } from 'react-native';
+import axios from 'axios';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function VersionScreen({navigation}) {
+export default function VersionScreen({ navigation }) {
     const [dimensions, setDimensions] = useState({
-        window: windowDimensions,
-        screen: screenDimensions,
+      window: windowDimensions,
+      screen: screenDimensions,
     });
-
+    const [versions, setVersions] = useState([]);
+    const [selectedVersion, setSelectedVersion] = useState('');
+    const [date, setDate] = useState('');
+    const [changelog, setChangelog] = useState('');
+  
     useEffect(() => {
-        const subscription = Dimensions.addEventListener(
-            'change',
-            ({window, screen}) => {
-                setDimensions({window, screen});
-            },
-        );
-        return () => subscription?.remove();
-    });
+        const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
+          setDimensions({ window, screen });
+        });
+      
+        fetchVersions();
+        const interval = setInterval(fetchVersions, 5000); // Fetch versions every 5 seconds
+      
+        return () => {
+          subscription?.remove();
+          clearInterval(interval);
+        };
+    }, [selectedVersion]); // Add selectedVersion to the dependency array
+      
+    const fetchVersions = async () => {
+        try {
+            const response = await axios.get('http://localhost:4444/versions');
+            const versionsData = response.data.versions;
+        
+            setVersions(versionsData);
+        
+            if (!selectedVersion && versionsData.length > 0) {
+            const defaultVersion = versionsData[versionsData.length - 1].toString();
+            setSelectedVersion(defaultVersion);
+            handleVersionChange(defaultVersion);
+            }
+        } catch (error) {
+            console.error('Error fetching versions:', error);
+        }
+    };
+      
+  
+    const handleVersionChange = (version) => {
+      setSelectedVersion(version);
+    };
+  
+    useEffect(() => {
+      if (selectedVersion) {
+        fetchVersionData(selectedVersion);
+      }
+    }, [selectedVersion]);
+  
+    const fetchVersionData = async (version) => {
+      try {
+        const [dateResponse, changelogResponse] = await Promise.all([
+           axios.get(`http://localhost:4444/versions/date/${version}`),
+           axios.get(`http://localhost:4444/versions/changelog/${version}`) 
+        ]);
 
-    if(dimensions.window.height >= dimensions.screen.width) {
-        return(
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={{ fontSize: 26, fontWeight: "bold" }}>Version Screen</Text>
+        const { date } = dateResponse.data;
+        const { changelog } = changelogResponse.data;
+
+        setDate(date);
+        setChangelog(changelog);
+      } catch (error) {
+        console.error('Error fetching version data:', error);
+      }
+    };
+  
+
+  if (dimensions.window.height >= dimensions.screen.width) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Version Screen</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
+        <View style={[styles.versionContainer, styles.boxShadow]}>
+          <View style={styles.versionTextContainer}>
+            <View style={[styles.versionNumberContainer]}>
+              <View style={styles.justifyContent}>
+                <Text style={[styles.white, styles.bold, styles.title]}>Version</Text>
+              </View>
+              <View style={[styles.versionPickerPos, styles.justifyContent]}>
+                <Picker
+                  selectedValue={selectedVersion}
+                  onValueChange={(version) => handleVersionChange(version)}
+                >
+                  {versions.map((version) => (
+                    <Picker.Item key={version} label={version.toString()} value={version.toString()} />
+                  ))}
+                </Picker>
+              </View>
             </View>
-        )
-    } else {
-        return(
-            <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
-                <View style={[styles.versionContainer, styles.boxShadow]}>
-                    <View style={styles.versionTextContainer}>
-                        <View style={[styles.versionNumberContainer, styles.justifyContent]}>
-                            <Text style={[styles.white, styles.bold, styles.title]}>Version 1</Text>
-                        </View>
-                        <View style={styles.versionChangelogContainer}>
-
-                        </View>
-                        <View style={styles.versionDateContainer}>
-
-                        </View>
-                    </View>
-                    <View style={styles.versionImageContainer}>
-
-                    </View>
+            <View style={styles.versionChangelogContainer}>
+              <Text style={[styles.white, styles.justifyContent]}>{changelog}</Text>
+            </View>
+            <View style={styles.versionDateContainer}>
+                <View>
+                    <Text style={[styles.white, styles.underline]}>Date de mise à jour :</Text>
                 </View>
-                <Footer navigation={navigation} />
+                <View>
+                    <Text style={[styles.white, styles.bold, styles.justifyContent]}>{date}</Text>
+                </View>
             </View>
-        )
-    }
+          </View>
+          <View style={styles.versionImageContainer}>
+            <Image source={require('../../assets/img/logoPenalityBoxDark.png')} style={styles.penalityLogo}/>
+          </View>
+        </View>
+        <Footer navigation={navigation} />
+      </View>
+    );
+  }
 }
