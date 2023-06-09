@@ -10,6 +10,10 @@ const styles = {
         backgroundColor: '#837A7A',
     },
 
+    boxBackground: {
+        backgroundColor: '#898989',
+    },
+
     boxShadow: {
         shadowColor: 'black',
         shadowRadius: 5,
@@ -226,6 +230,8 @@ const styles = {
 
  - CSS Contact.js
 
+*/
+
     /*
 
     - CSS for Phone
@@ -330,6 +336,7 @@ const styles = {
         borderColor: 'black',
         borderRadius: 3,
     },
+
     logo: {
         width: 190,
         height: 53,
@@ -563,19 +570,44 @@ const styles = {
 
     */
 
-     recentUsersContainer: {
-        width: '15%',
-        height: '22%',
+     adminPanelContainerPos: {
         marginTop: '2%',
         marginLeft: '2%',
-        backgroundColor: '#898989',
      },
 
-     /*
+    recentUsersContainer: {
+        width: '15%',
+        height: '22%',
+    },
+
+    handleAdminContainer: {
+        width: '20%',
+        alignSelf: 'flex-start',
+    },
+
+    insertVersionContainer: {
+        width: '40%',
+        height: '45%',
+        alignSelf: 'flex-start',
+    },
+
+    versionEditorContainer: {
+        width: '96%',
+        height: '70%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        flex: 1,
+    },
+
+    /*
 
      - Container
 
-     */
+     ----------------
+
+     - Dividers
+
+    */
 
     divider: {
         borderBottomWidth: 1,
@@ -590,6 +622,16 @@ const styles = {
         borderRightColor: 'black',
     },
 
+    /*
+
+     - Dividers
+
+     -----------------
+
+     - Handling user admin color
+
+    */
+
     adminToggle: {
         color: 'red'
     },
@@ -597,6 +639,62 @@ const styles = {
     adminToggleActive: {
         color: 'lightgreen',
     },
+
+    /*
+
+     - Handling user admin color
+
+     -----------------
+
+     - Sub-View
+
+    */
+
+     /*
+
+     - Container
+
+     */
+
+    versionChangelogEditor: {
+        width: '80%',
+        height: '100%',
+        backgroundColor: 'lightblue',
+    },
+
+    versionImageImport: {
+        width: '20%',
+        height: '100%',
+        backgroundColor: 'beige',
+    },
+
+     /*
+
+      - Container
+
+      ---------------
+
+      - Handling Pos
+
+     */
+
+      numberInput: {
+        width: '15%',
+        borderWidth: 1,
+        borderColor: 'black',
+      },
+
+     /*
+
+      - Handling Pos
+
+     */
+
+    /*
+
+    - Sub-View
+
+    */
 
 /*
 

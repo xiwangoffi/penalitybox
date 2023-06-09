@@ -240,7 +240,7 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
         <View style={styles.iconContainer}>
           <Icon name="at" size={20} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]}
+            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
             placeholder="E-mail"
             keyboardType="email-address"
             placeholderTextColor="lightgrey"
@@ -251,7 +251,7 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
           <View style={styles.iconContainer}>
             <Icon name="lock" size={20} color="lightgrey" />
             <TextInput
-              style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]}
+              style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
               placeholder="Mot de passe"
               placeholderTextColor="lightgrey"
               secureTextEntry={true}
@@ -263,14 +263,14 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
           <View>
             <View style={styles.iconContainer}>
               <Icon name="key" size={20} color="lightgrey" />
-              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} 
+              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
                 placeholder='Jeton de rénitialisation' 
                 value={resetToken} 
                 onChangeText={setResetToken} />
             </View>
             <View style={styles.iconContainer}> 
               <Icon name="lock" size={20} color="lightgrey" />
-              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]} 
+              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
                 placeholder='Nouveau mot de passe' 
                 value={newPassword} 
                 onChangeText={setNewPassword} 

@@ -7,10 +7,9 @@ const jsonParser = bodyParser.json();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-// Ce code va en haut de votre fichier index.js, dans vos requires
-var cors = require('cors')
+const axios = require('axios');
+var cors = require('cors');
 
-//celui-ci après la déclaration de la variable app
 app.use(cors())
 
 dbo.connectToServer();
@@ -25,15 +24,11 @@ app.listen(port, function () {
 });
 
 
-/* index.js code before... */
 app.get("/account/list", function (req, res) {
-    //on se connecte à la DB MongoDB
     const dbConnect = dbo.getDb();
-    //premier test permettant de récupérer mes pokemons !
     dbConnect
       .collection("account")
-      .find({}) // permet de filtrer les résultats
-      /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
+      .find({})
       .toArray(function (err, result) {
         if (err) {
           res.status(400).send("Error fetching accounts!");
@@ -41,11 +36,6 @@ app.get("/account/list", function (req, res) {
           res.json(result);
         }
       });
-      /*
-      Bref lisez la doc, 
-      il y a plein de manières de faire ce qu'on veut :) 
-      */
-      
 });
 
 app.get('/account/admin/:mail', function (req, res) {
@@ -235,46 +225,49 @@ app.get('/account/recent', async (req, res) => {
   }
 });
 
-
-
-app.post('/versions/insert', jsonParser, (req, res) => {
-    const { version, changelog, image } = req.body;
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const versionDate = year + "-" + month + "-" + day;
-    const dbConnect = dbo.getDb();
-  
-    const versionData = {
-      version: version,
-      changelog: changelog,
-      date: versionDate,
-      image: image
-    };
-  
-    dbConnect.collection('versions').insertOne(versionData, (err, result) => {
-      if (err) {
-        res.status(400).send('Error inserting version data!');
-      } else {
-        res.status(200).send('Version data inserted successfully!');
-      }
-    });
-});
-
-app.get('/versions', function (req, res) {
+app.post("/versions/insert", jsonParser, (req, res) => {
+  const { changelog, image } = req.body;
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const versionDate = year + "-" + month + "-" + day;
   const dbConnect = dbo.getDb();
 
-  dbConnect.collection('versions').find({}, { projection: { _id: 0, version: 1 } }).toArray(function (err, result) {
+  const versionData = {
+    version: "",
+    changelog: changelog,
+    date: versionDate,
+    image: image,
+  };
+
+  dbConnect.collection("versions").insertOne(versionData, (err, result) => {
     if (err) {
-      res.status(400).send('Error fetching versions!');
+      res.status(400).send("Error inserting version data!");
     } else {
-      const versions = result.map((item) => item.version);
-      res.json({ versions });
+      // Fetch the next version number
+      axios.get("http://localhost:4444/versions/increase")
+        .then((response) => {
+          const nextVersion = response.data.version;
+          // Update the inserted version with the next version number
+          dbConnect.collection("versions").updateOne(
+            { _id: result.insertedId },
+            { $set: { version: nextVersion } },
+            (err) => {
+              if (err) {
+                res.status(400).send("Error updating version number!");
+              } else {
+                res.status(200).send("Version data inserted successfully!");
+              }
+            }
+          );
+        })
+        .catch((error) => {
+          res.status(500).send("Error fetching next version number!");
+        });
     }
   });
 });
-
 
 app.get('/versions/date/:version', function (req, res) {
   const { version } = req.params;
@@ -293,6 +286,28 @@ app.get('/versions/date/:version', function (req, res) {
   });
 });
 
+app.get("/versions/increase", (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection("versions")
+    .find()
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray((err, result) => {
+      if (err) {
+        res.status(400).send("Error fetching latest version!");
+      } else {
+        let latestVersion = result.length > 0 ? result[0].version : "0";
+        let nextVersion = (parseInt(latestVersion) + 1).toString();
+        res.json({ version: nextVersion });
+      }
+    });
+
+    //Insert method here with those values : changelog date image
+});
+
+
 app.get('/versions/changelog/:version', function (req, res) {
   const { version } = req.params;
   const dbConnect = dbo.getDb();
@@ -309,6 +324,7 @@ app.get('/versions/changelog/:version', function (req, res) {
     }
   });
 });
+
 
 app.get('/versions/image/:version', function (req, res) {
   const { version } = req.params;

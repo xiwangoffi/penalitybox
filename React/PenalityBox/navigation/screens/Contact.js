@@ -40,17 +40,17 @@ export default function ContactScreen({navigation}) {
             <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
                 <View style={styles.iconContainer}>
                     <Icon name="user" size={20} color="lightgrey" />
-                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.white]} placeholder='Nom' placeholderTextColor='lightgrey'></TextInput> 
+                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]} placeholder='Nom' placeholderTextColor='lightgrey'></TextInput> 
                 </View>
                 <View style={styles.iconContainer}>
                     <Icon name="user" size={20} color="lightgrey" />
-                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.white]} placeholder='Prénom' placeholderTextColor='lightgrey'></TextInput>
+                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]} placeholder='Prénom' placeholderTextColor='lightgrey'></TextInput>
                 </View>
                 <View style={styles.iconContainer}>
                     <Icon name="envelope" size={15} color="lightgrey" />
-                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.white]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='lightgrey'></TextInput>
+                    <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]} placeholder='Mail' keyboardType='email-address' placeholderTextColor='lightgrey'></TextInput>
                 </View>
-                <TextInput style={[styles.informationContainer, styles.messageBox, styles.boxShadow, styles.white]} placeholder='Message' multiline={true} placeholderTextColor='lightgrey'></TextInput>
+                <TextInput style={[styles.informationContainer, styles.messageBox, styles.boxShadow, styles.boxBackground, styles.white]} placeholder='Message' multiline={true} placeholderTextColor='lightgrey'></TextInput>
                 <View style={[styles.validateButton, styles.boxShadow]}>
                     <Button title='Valider' color='grey'/>
                 </View>

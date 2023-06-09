@@ -17,7 +17,7 @@ import UserAccount from './screens/UserAccount';
 // Screen names
 const homeName = 'Accueil';
 const contactName = 'Contact';
-const appliName = 'App';
+const appliName = 'Download';
 const versionsName = 'Versions';
 const adminName = 'Admin';
 const creditsScreen = 'Crédits';
