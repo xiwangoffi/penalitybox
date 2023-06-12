@@ -513,12 +513,12 @@ const styles = {
     },
 
     versionTextContainer: {
-        width: '50%',
+        width: '60%',
         height: '100%',
     },
 
     versionImageContainer: {
-        width: '50%',
+        width: '40%',
         height: '100%',
     },
 
@@ -674,19 +674,18 @@ const styles = {
 
       ---------------
 
-      - Handling Pos
+      - Editor Box
 
      */
 
-      numberInput: {
-        width: '15%',
-        borderWidth: 1,
-        borderColor: 'black',
+      versionChangelogBox: {
+        width: '95%',
+        height: '100%'
       },
 
      /*
 
-      - Handling Pos
+      - Editor Box
 
      */
 

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, Button } from 'react-native';
 import axios from 'axios';
 import styles from '../../styles/styles';
+import { launchImageLibrary } from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 export default function AdminScreen({ navigation }) {
   const [recentUsers, setRecentUsers] = useState([]);
   const [users, setUsers] = useState([]);
-
-  const [isVersionNotProvided, setIsVersionNotProvided] = useState(false);
-  const [isChangelogNotProvided, setIsChangelogNotProvided] = useState(false);
-  const [isNoneProvided, setIsNoneProvided] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
 
   useEffect(() => {
     const fetchUsersAndRecent = async () => {
@@ -44,6 +43,7 @@ export default function AdminScreen({ navigation }) {
       console.error('Error fetching users:', error);
     }
   }
+  
 
   const toggleAdmin = async (mail, admin) => {
     try {
@@ -57,22 +57,6 @@ export default function AdminScreen({ navigation }) {
   };
 
   const insertVersionData = async (version, changelog, image) => {
-    if (!version && !changelog) {
-      setIsVersionNotProvided(false);
-      setIsChangelogNotProvided(false);
-      setIsNoneProvided(true);
-      return;
-    } else if (!version) {
-      setIsChangelogNotProvided(false);
-      setIsNoneProvided(false);
-      setIsVersionNotProvided(true);
-      return;
-    } else if (!changelog) {
-      setIsVersionNotProvided(false);
-      setIsNoneProvided(false)
-      setIsChangelogNotProvided(true);
-      return;
-    }
   
     try {
       const date = new Date();
@@ -85,7 +69,7 @@ export default function AdminScreen({ navigation }) {
         version: version,
         changelog: changelog,
         date: versionDate,
-        image: image
+        image: image.uri
       };
   
       const response = await axios.post('http://localhost:4444/versions/insert', versionData);
@@ -98,6 +82,49 @@ export default function AdminScreen({ navigation }) {
       console.error('Error inserting version data:', error);
     }
   };
+
+  const handleImagePicker = () => {
+    const options = {
+      mediaType: 'photo', // Specify the media type as photo
+      quality: 1, // Set the image quality (0 to 1)
+    };
+  
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error:', response.error);
+      } else if (response.assets && response.assets.length > 0) {
+        const selectedImage = response.assets[0];
+        setImageUri(selectedImage.uri);
+        // Call function to upload the image to the server
+        uploadImage(selectedImage);
+      }
+    });
+  };
+
+  const uploadImage = async (selectedImage) => {
+    const imageUri = selectedImage.uri;
+
+    RNFetchBlob.fetch('POST', 'http://localhost:4444/upload', {
+      'Content-Type': 'multipart/form-data',
+    }, [
+      {
+        name: 'image',
+        filename: selectedImage.fileName || 'image.jpg',
+        data: RNFetchBlob.wrap(imageUri),
+      },
+    ])
+      .then((res) => {
+        console.log('Image uploaded:', res.data);
+      })
+      .catch((error) => {
+        console.error('Error uploading image:', error);
+      });
+  };
+  
+
+
   
 
   return (
@@ -173,11 +200,12 @@ export default function AdminScreen({ navigation }) {
         <View style={styles.divider} />
         <View style={[styles.mediumBr, styles.justifyContent]} />
         <View style={[styles.versionEditorContainer, styles.row]}>
-          <View style={styles.versionChangelogEditor}>
-
+          <View style={[styles.versionChangelogEditor, styles.alignItems]}>
+            <TextInput style={styles.versionChangelogBox} multiline={true} />
           </View>
           <View style={styles.versionImageImport}>
-
+            {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
+            <Button title="Select Image" onPress={handleImagePicker} />
           </View>
         </View>
         <View style={styles.br} />
