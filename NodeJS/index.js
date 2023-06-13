@@ -8,9 +8,10 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 var cors = require('cors');
 const multer = require('multer');
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors())
 
@@ -24,20 +25,6 @@ app.get("/", function (req, res) {
 app.listen(port, function () {
   console.log(`App listening on port ${port}!`);
 });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Specify the destination folder where the uploaded files will be stored
-    cb(null, '../React/PenalityBox/assets/versions');
-  },
-  filename: (req, file, cb) => {
-    // Generate a unique filename for the uploaded file
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
-  },
-});
-
-const upload = multer({ storage });
 
 
 app.get("/account/list", function (req, res) {
@@ -254,6 +241,24 @@ app.get('/versions', function (req, res) {
   });
 });
 
+
+app.get('/versions/date/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ date: result.date });
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
+
 app.post("/versions/insert", jsonParser, (req, res) => {
   const { changelog, image } = req.body;
   const date = new Date();
@@ -298,23 +303,6 @@ app.post("/versions/insert", jsonParser, (req, res) => {
   });
 });
 
-app.get('/versions/date/:version', function (req, res) {
-  const { version } = req.params;
-  const dbConnect = dbo.getDb();
-
-  dbConnect.collection('versions').findOne({ version }, function (err, result) {
-    if (err) {
-      res.status(400).send('Error fetching version!');
-    } else {
-      if (result) {
-        res.json({ date: result.date });
-      } else {
-        res.status(400).send('Version not found!');
-      }
-    }
-  });
-});
-
 app.get("/versions/increase", (req, res) => {
   const dbConnect = dbo.getDb();
 
@@ -328,13 +316,12 @@ app.get("/versions/increase", (req, res) => {
         res.status(400).send("Error fetching latest version!");
       } else {
         let latestVersion = result.length > 0 ? result[0].version : "0";
-        let nextVersion = (parseInt(latestVersion) + 1).toString();
-        res.json({ version: nextVersion });
+        let nextVersion = (parseInt(latestVersion) || 0) + 1;
+        res.json({ version: nextVersion.toString() });
       }
     });
-
-    //Insert method here with those values : changelog date image
 });
+
 
 
 app.get('/versions/changelog/:version', function (req, res) {
@@ -1227,15 +1214,60 @@ app.post('/contact/send', function (req, res) {
 });
 
 
-
-app.post('/upload', upload.single('image'), (req, res) => {
-  // Access the uploaded file details
-  const file = req.file;
-
-  // Process the file as needed
-  // Example: Save the file to a specific location
-  // fs.renameSync(file.path, 'path/to/save/processed/files/' + file.originalname);
-
-  // Send a response back to the client
-  res.json({ success: true, message: 'File uploaded successfully' });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
+
+const upload = multer({ storage: storage }).single('file');
+
+app.post('/upload', function (req, res, next) {
+  upload(req, res, function (err) { // Updated here
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    return res.status(200).json({ message: 'File uploaded successfully', data: req.file });
+  });
+});
+
+/*
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const originalname = file.originalname;
+    const fileExtension = path.extname(originalname);
+    cb(null, originalname.replace(fileExtension, '') + '-' + uniqueSuffix + fileExtension);
+  },
+});
+
+const upload = multer({ storage: storage }).single('file');
+
+app.post('/upload', function (req, res, next) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log('Multer Error:', err);
+      res.status(500).send('An error occurred during file upload');
+    } else if (err) {
+      console.log('Unknown Error:', err);
+      res.status(500).send('An unknown error occurred during file upload');
+    } else {
+      if (req.file && req.file.originalname) {
+        const originalname = req.file.originalname;
+        const fileExtension = path.extname(originalname);
+        res.status(200).send({
+          filename: originalname,
+          extension: fileExtension,
+        });
+      } else {
+        res.status(400).send('Invalid file');
+      }
+    }
+  });
+});
+*/
+
