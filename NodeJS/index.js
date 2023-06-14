@@ -1,6 +1,8 @@
 const express = require("express");
 const dbo = require("./db/db");
 const app = express();
+var cors = require('cors');
+app.use(cors());
 const bodyParser = require('body-parser');
 const port = 4444;
 const jsonParser = bodyParser.json();
@@ -10,10 +12,9 @@ const nodemailer = require('nodemailer');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-var cors = require('cors');
 const multer = require('multer');
 app.use(bodyParser.json());
-app.use(cors())
+
 
 dbo.connectToServer();
 
@@ -1216,21 +1217,25 @@ app.post('/contact/send', function (req, res) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/');
+    cb(null, '../React/PenalityBox/assets/versions/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
-const upload = multer({ storage: storage }).single('file');
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }).single('file');
 
 app.post('/upload', function (req, res, next) {
   upload(req, res, function (err) { // Updated here
     if (err) {
       return res.status(500).json({ error: err });
     }
-    return res.status(200).json({ message: 'File uploaded successfully', data: req.file });
+    if (req.file && req.file.filename) {
+      return res.status(200).json({ message: 'File uploaded successfully', filename: req.file.filename });
+    } else {
+      return res.status(500).json({ message: 'Error uploading file' });
+    }
   });
 });
 

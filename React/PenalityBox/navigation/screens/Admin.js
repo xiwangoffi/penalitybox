@@ -8,6 +8,7 @@ export default function AdminScreen({ navigation }) {
   const [recentUsers, setRecentUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [imageUri, setImageUri] = useState(null);
+  const [changelog, setChangelog] = useState('');
 
   useEffect(() => {
     const fetchUsersAndRecent = async () => {
@@ -60,63 +61,6 @@ export default function AdminScreen({ navigation }) {
     }
   };
 
-  const insertVersionData = async (changelog, filename) => {
-    try {
-      const versionData = new FormData();
-      versionData.append('changelog', changelog);
-      versionData.append('file', filename);
-  
-      const response = await axios.post('http://localhost:4444/versions/insert', versionData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      if (response.status === 200) {
-        console.log('Version data inserted successfully!');
-      } else {
-        console.log('Error inserting version data!');
-      }
-    } catch (error) {
-      console.error('Error inserting version data:', error);
-    }
-  };
-  
-
-  const handleImageUpload = async () => {
-    if (!imageUri) {
-      return;
-    }
-  
-    try {
-      const formData = new FormData();
-      const fileName = imageUri.split('/').pop();
-      const fileType = fileName.split('.').pop();
-      formData.append('file', {
-        uri: imageUri,
-        name: fileName,
-        type: `image/${fileType}`,
-      });
-      
-      const response = await axios.post('http://localhost:4444/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      if (response.status === 200) {
-        console.log('File uploaded successfully');
-        const changelog = 'test'; // Replace with the actual changelog value
-        insertVersionData(changelog, response.data.file); // Fix here
-      } else {
-        console.log('Error uploading file:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
-  };
-  
-
   const handleImagePicker = () => {
     const options = {
       mediaType: 'photo',
@@ -135,6 +79,52 @@ export default function AdminScreen({ navigation }) {
     });
   };
 
+  const handleImageUpload = async () => {
+    try {
+      const formData = new FormData();
+  
+      if (imageUri) {
+        const selectedImage = await fetch(imageUri);
+        const imageBlob = await selectedImage.blob();
+  
+        formData.append('file', imageBlob, 'image.jpg');
+  
+        const response = await axios.post('http://localhost:4444/upload', formData);
+        if (response.status === 200) {
+          console.log('File uploaded successfully');
+          insertVersionData(changelog, response.data.filename); // Pass the filename to insertVersionData
+        } else {
+          console.log('Error uploading file');
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
+
+  const insertVersionData = async (changelog, image) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:4444/versions/insert',
+        {
+          changelog, 
+          image,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      
+      if (response.status === 200) {
+        console.log('Version data inserted successfully!');
+      } else {
+        console.log('Error inserting version data!');
+      }
+    } catch (error) {
+      console.error('Error inserting version data:', error);
+    }
+  };
+
   return (
     <View style={[styles.background, styles.flexOne, styles.row]}>
       <View style={[styles.recentUsersContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
@@ -147,6 +137,7 @@ export default function AdminScreen({ navigation }) {
             </View>
           ))}
         </View>
+        <View style={styles.mediumBr} />
       </View>
       <View style={[styles.handleAdminContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
         <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Gestion rôle admin</Text>
@@ -219,15 +210,18 @@ export default function AdminScreen({ navigation }) {
         <View style={[styles.mediumBr, styles.justifyContent]} />
         <View style={[styles.versionEditorContainer, styles.row]}>
           <View style={[styles.versionChangelogEditor, styles.alignItems]}>
-            <TextInput style={styles.versionChangelogBox} multiline={true} />
+            <TextInput
+              style={styles.versionChangelogBox}
+              multiline={true}
+              value={changelog}
+              onChangeText={(text) => setChangelog(text)}
+            />
           </View>
           <View style={styles.versionImageImport}>
+          {imageUri && <Image source={{ uri: imageUri }} style={styles.penalityLogo} />}
             <TouchableOpacity onPress={handleImagePicker}>
               <Text style={styles.green}>Select Image</Text>
             </TouchableOpacity>
-            {imageUri && (
-              <Image source={{ uri: imageUri }} style={styles.penalityLogo} />
-            )}
           </View>
         </View>
         <View style={styles.br} />

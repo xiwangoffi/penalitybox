@@ -577,7 +577,7 @@ const styles = {
 
     recentUsersContainer: {
         width: '15%',
-        height: '22%',
+        alignSelf: 'flex-start',
     },
 
     handleAdminContainer: {
