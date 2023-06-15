@@ -7,7 +7,7 @@ export default function AppScreen({navigation}) {
     return(
         <View style={styles.background}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Text onPress={() => navigation.navigate('Home')}
+                <Text onPress={() => navigation.navigate('Accueil')}
                 style={{ fontSize: 26, fontWeight: "bold" }}>AppScreen Screen</Text>
                 <Footer navigation={navigation}/>
             </View>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdownDisplay from 'react-native-markdown-display';
 import { View, Text, Image, Dimensions, Picker } from 'react-native';
 import axios from 'axios';
 import Footer from '../../components/footer';
@@ -16,6 +17,7 @@ export default function VersionScreen({ navigation }) {
     const [selectedVersion, setSelectedVersion] = useState('');
     const [date, setDate] = useState('');
     const [changelog, setChangelog] = useState('');
+    const [image, setImage] = useState(null);
   
     useEffect(() => {
         const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -29,7 +31,7 @@ export default function VersionScreen({ navigation }) {
           subscription?.remove();
           clearInterval(interval);
         };
-    }, [selectedVersion]); // Add selectedVersion to the dependency array
+    }, [selectedVersion]);
       
     const fetchVersions = async () => {
         try {
@@ -61,16 +63,20 @@ export default function VersionScreen({ navigation }) {
   
     const fetchVersionData = async (version) => {
       try {
-        const [dateResponse, changelogResponse] = await Promise.all([
+        const [dateResponse, changelogResponse, imageResponse] = await Promise.all([
            axios.get(`http://localhost:4444/versions/date/${version}`),
-           axios.get(`http://localhost:4444/versions/changelog/${version}`) 
+           axios.get(`http://localhost:4444/versions/changelog/${version}`),
+           axios.get(`http://localhost:4444/versions/image/${version}`),
         ]);
 
         const { date } = dateResponse.data;
         const { changelog } = changelogResponse.data;
+        const { image } = imageResponse.data;
+
 
         setDate(date);
         setChangelog(changelog);
+        setImage(image);
       } catch (error) {
         console.error('Error fetching version data:', error);
       }
@@ -104,7 +110,7 @@ export default function VersionScreen({ navigation }) {
               </View>
             </View>
             <View style={styles.versionChangelogContainer}>
-              <Text style={[styles.white, styles.justifyContent]}>{changelog}</Text>
+              <ReactMarkdownDisplay style={{body: {color: 'white'}}}>{changelog}</ReactMarkdownDisplay>
             </View>
             <View style={styles.versionDateContainer}>
                 <View>
@@ -116,7 +122,7 @@ export default function VersionScreen({ navigation }) {
             </View>
           </View>
           <View style={styles.versionImageContainer}>
-            <Image source={require('../../assets/img/logoPenalityBoxDark.png')} style={styles.penalityLogo}/>
+            {image && <Image source={require(`../../assets/versions/${image}`)} style={styles.penalityLogo} />}
           </View>
         </View>
         <Footer navigation={navigation} />

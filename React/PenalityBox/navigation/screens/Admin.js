@@ -1,15 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, Button } from 'react-native';
 import axios from 'axios';
 import styles from '../../styles/styles';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 export default function AdminScreen({ navigation }) {
+
+  //Handling insert version database fields
   const [recentUsers, setRecentUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [imageUri, setImageUri] = useState(null);
   const [changelog, setChangelog] = useState('');
+  const [developers, setDevelopers] = useState('');
 
+  //Handling insert version errors
+  const [isEmptyVersionFields, setIsEmptyVersionFields] = useState(false);
+  const [isEmptyVersionImage, setIsEmptyVersionImage] = useState(false);
+  const [isEmptyVersionChangelog, setIsEmptyVersionChangelog] = useState(false);
+  const [isEmptyVersionDevelopers, setIsEmptyVersionDevelopers] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  //Clear message when empty field
+  const resetErrors = async () => {
+    setIsEmptyVersionChangelog(false);
+    setIsEmptyVersionFields(false);
+    setIsEmptyVersionImage(false);
+    setIsEmptyVersionDevelopers(false);
+  }
+
+  //Timer for the message when insert version is done successfully
+  useEffect(() => {
+    let timer;
+    if (showSuccessMessage) {
+      timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [showSuccessMessage]);
+
+  //Auto refreshing listing recent / all users
   useEffect(() => {
     const fetchUsersAndRecent = async () => {
       await fetchRecentUsers();
@@ -25,12 +55,7 @@ export default function AdminScreen({ navigation }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (imageUri) {
-      handleImageUpload();
-    }
-  }, [imageUri]);
-
+  //Request that list recent users (limit 5)
   const fetchRecentUsers = async () => {
     try {
       const response = await axios.get('http://localhost:4444/account/recent');
@@ -41,6 +66,7 @@ export default function AdminScreen({ navigation }) {
     }
   };
 
+  //Request that list all users
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:4444/account/list');
@@ -50,6 +76,7 @@ export default function AdminScreen({ navigation }) {
     }
   };
 
+  //Request handling user admin Yes/No
   const toggleAdmin = async (mail, admin) => {
     try {
       // Send a request to update the admin value for the user
@@ -61,6 +88,7 @@ export default function AdminScreen({ navigation }) {
     }
   };
 
+  //Function to select image from computer
   const handleImagePicker = () => {
     const options = {
       mediaType: 'photo',
@@ -79,35 +107,60 @@ export default function AdminScreen({ navigation }) {
     });
   };
 
+  //Request handling Image import Client --> Server
   const handleImageUpload = async () => {
+
+    //Handling errors/crashes when empty fields
+    if(!imageUri && (changelog === null || changelog === '')) {
+      setIsEmptyVersionChangelog(false);
+      setIsEmptyVersionImage(false);
+      setIsEmptyVersionFields(true);
+      return;
+    } else if (!imageUri) {
+      setIsEmptyVersionChangelog(false);
+      setIsEmptyVersionFields(false);
+      setIsEmptyVersionImage(true);
+      return;
+    } else if (changelog === null || changelog === '') {
+      setIsEmptyVersionFields(false);
+      setIsEmptyVersionImage(false);
+      setIsEmptyVersionChangelog(true);
+      return;
+    } else {
+      resetErrors();
+      setShowSuccessMessage(true);
+    }
+
     try {
       const formData = new FormData();
   
-      if (imageUri) {
-        const selectedImage = await fetch(imageUri);
-        const imageBlob = await selectedImage.blob();
-  
-        formData.append('file', imageBlob, 'image.jpg');
-  
-        const response = await axios.post('http://localhost:4444/upload', formData);
-        if (response.status === 200) {
-          console.log('File uploaded successfully');
-          insertVersionData(changelog, response.data.filename); // Pass the filename to insertVersionData
-        } else {
-          console.log('Error uploading file');
-        }
+      const selectedImage = await fetch(imageUri);
+      const imageBlob = await selectedImage.blob(); //Retrieve image data as needed for the server
+
+      formData.append('file', imageBlob, 'image.jpg');
+
+      const response = await axios.post('http://localhost:4444/upload', formData);
+      if (response.status === 200) {
+        console.log('File uploaded successfully');
+        insertVersionData(changelog, response.data.filename); // Pass the filename to insertVersionData
+        setImageUri(null); // Reset imageUri field to empty
+        setChangelog(''); // Reset changelog field to empty
+      } else {
+        console.log('Error uploading file');
       }
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   };
 
-  const insertVersionData = async (changelog, image) => {
+  //Request that insert a new version in Db
+  const insertVersionData = async (changelog, dev, image) => {
     try {
       const response = await axios.post(
         'http://localhost:4444/versions/insert',
         {
           changelog, 
+          dev,
           image,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -208,20 +261,44 @@ export default function AdminScreen({ navigation }) {
         <View style={styles.littleBr} />
         <View style={styles.divider} />
         <View style={[styles.mediumBr, styles.justifyContent]} />
-        <View style={[styles.versionEditorContainer, styles.row]}>
-          <View style={[styles.versionChangelogEditor, styles.alignItems]}>
-            <TextInput
-              style={styles.versionChangelogBox}
-              multiline={true}
-              value={changelog}
-              onChangeText={(text) => setChangelog(text)}
-            />
+        <View style={[styles.versionEditorContainer, styles.alignItems, {flexDirection: 'column', justifyContent: 'center'}]}>
+          <View style={[styles.editorSubView ,styles.row]}>
+            <View style={[styles.versionChangelogEditor, styles.alignItems]}>
+              <TextInput
+                style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
+                placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
+                placeholderTextColor="black"
+                multiline={true}
+                value={changelog}
+                onChangeText={(text) => setChangelog(text)}
+              />
+            </View>
+            <View style={[styles.versionImageImport, styles.verticalAlign, styles.alignItems, styles.justifyContent]}>
+                <TouchableOpacity style={[styles.alignItems, styles.justifyContent, styles.selectPos]} onPress={handleImagePicker}>
+                  <Text style={[styles.green, styles.textShadow]}>Select Image</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={[styles.versionImagePreview, styles.justifyContent, styles.alignItems, styles.boxShadow]}>
+              {imageUri && <Image source={{uri: imageUri}} style={styles.imagePreview} />}
+            </View>
           </View>
-          <View style={styles.versionImageImport}>
-          {imageUri && <Image source={{ uri: imageUri }} style={styles.penalityLogo} />}
-            <TouchableOpacity onPress={handleImagePicker}>
-              <Text style={styles.green}>Select Image</Text>
-            </TouchableOpacity>
+          <Text style={[ [styles.bold, styles.textShadow, [
+            isEmptyVersionFields ||
+            isEmptyVersionImage ||
+            isEmptyVersionChangelog ? [styles.red] : showSuccessMessage ? [styles.green] : null
+          ]]]}>
+            {isEmptyVersionFields 
+              ? 'Veuillez mettre un changelog et une image'
+              : isEmptyVersionImage
+              ? 'Veuillez insérer une image'
+              : isEmptyVersionChangelog
+              ? 'Veuillez insérer un changelog'
+              : showSuccessMessage
+              ? 'Version insérée avec succès'
+              : null}
+          </Text>
+          <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
+            <Button title="Valider" color="grey" onPress={handleImageUpload}/>
           </View>
         </View>
         <View style={styles.br} />

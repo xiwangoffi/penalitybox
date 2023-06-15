@@ -586,14 +586,12 @@ const styles = {
     },
 
     insertVersionContainer: {
-        width: '40%',
-        height: '45%',
+        width: '50%',
         alignSelf: 'flex-start',
     },
 
     versionEditorContainer: {
         width: '96%',
-        height: '70%',
         marginLeft: '2%',
         marginRight: '2%',
         flex: 1,
@@ -657,15 +655,18 @@ const styles = {
      */
 
     versionChangelogEditor: {
-        width: '80%',
-        height: '100%',
-        backgroundColor: 'lightblue',
+        width: '55%',
+        height: '20em',
     },
 
     versionImageImport: {
-        width: '20%',
+        width: '10%',
         height: '100%',
-        backgroundColor: 'beige',
+    },
+
+    editorSubView: {
+        width: '100%',
+        height: '90%',
     },
 
      /*
@@ -679,8 +680,10 @@ const styles = {
      */
 
       versionChangelogBox: {
-        width: '95%',
-        height: '100%'
+        width: '100%',
+        height: '100%',
+        borderWidth: 1,
+        borderColor: 'white'
       },
 
      /*
@@ -689,11 +692,26 @@ const styles = {
 
      */
 
+      
+      selectPos:{
+        height: '20em',
+      },
+
+      versionImagePreview: {
+        width: '35%',
+      },
+
     /*
 
     - Sub-View
 
     */
+
+    imagePreview: {
+        width: '50%',
+        height: '50%',
+        alignSelf: 'center',
+    },
 
 /*
 

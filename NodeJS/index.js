@@ -260,8 +260,39 @@ app.get('/versions/date/:version', function (req, res) {
   });
 });
 
-app.post("/versions/insert", jsonParser, (req, res) => {
+app.put('/version/update/:version', jsonParser, (req, res) => {
+  const versionNumber = req.params.version;
   const { changelog, image } = req.body;
+  const dbConnect = dbo.getDb();
+
+  const updateData = {};
+  if (changelog) {
+    updateData.changelog = changelog;
+  }
+  if (image) {
+    updateData.image = image;
+  }
+
+  dbConnect.collection('versions').updateOne(
+    { version: versionNumber },
+    { $set: updateData },
+    (err, result) => {
+      if (err) {
+        res.status(400).send('Error updating version data!');
+      } else {
+        if (result.modifiedCount === 1) {
+          res.status(200).send('Version data updated successfully!');
+        } else {
+          res.status(404).send(`Version ${versionNumber} not found!`);
+        }
+      }
+    }
+  );
+});
+
+
+app.post("/versions/insert", jsonParser, (req, res) => {
+  const { changelog, dev, image } = req.body;
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -272,6 +303,7 @@ app.post("/versions/insert", jsonParser, (req, res) => {
   const versionData = {
     version: "",
     changelog: changelog,
+    dev: dev,
     date: versionDate,
     image: image,
   };
@@ -342,6 +374,23 @@ app.get('/versions/changelog/:version', function (req, res) {
   });
 });
 
+app.get('/version/image/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function(err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ image: result.image});
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
+
 
 app.get('/versions/image/:version', function (req, res) {
   const { version } = req.params;
@@ -361,6 +410,23 @@ app.get('/versions/image/:version', function (req, res) {
 });
 
 
+app.post('/version/delete', async (req, res) => {
+  const version = req.body.version;
+  const dbConnect = dbo.getDb();
+
+  try {
+    const result = await dbConnect.collection('versions').deleteOne({ version: version });
+
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: `Version ${version} deleted successfully` });
+    } else {
+      res.status(404).json({ message: `Version ${version} not found` });
+    }
+  } catch (error) {
+    console.error('Error deleting version:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
@@ -1238,41 +1304,3 @@ app.post('/upload', function (req, res, next) {
     }
   });
 });
-
-/*
-const storage = multer.diskStorage({
-  destination: 'uploads/',
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const originalname = file.originalname;
-    const fileExtension = path.extname(originalname);
-    cb(null, originalname.replace(fileExtension, '') + '-' + uniqueSuffix + fileExtension);
-  },
-});
-
-const upload = multer({ storage: storage }).single('file');
-
-app.post('/upload', function (req, res, next) {
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      console.log('Multer Error:', err);
-      res.status(500).send('An error occurred during file upload');
-    } else if (err) {
-      console.log('Unknown Error:', err);
-      res.status(500).send('An unknown error occurred during file upload');
-    } else {
-      if (req.file && req.file.originalname) {
-        const originalname = req.file.originalname;
-        const fileExtension = path.extname(originalname);
-        res.status(200).send({
-          filename: originalname,
-          extension: fileExtension,
-        });
-      } else {
-        res.status(400).send('Invalid file');
-      }
-    }
-  });
-});
-*/
-
