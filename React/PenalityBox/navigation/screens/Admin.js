@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image, Button } from 'react-native';
-import axios from 'axios';
+import { View, Text, TouchableOpacity, TextInput, Image, Button, Picker } from 'react-native';
 import styles from '../../styles/styles';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { fetchRecentUsers, fetchUsers, updateAdmin } from '../../api/account';
+import { handleImageUpload, fetchVersions, fetchVersionData } from '../../api/version';
 
 export default function AdminScreen({ navigation }) {
 
-  //Handling insert version database fields
+  //Handling accounts states
   const [recentUsers, setRecentUsers] = useState([]);
   const [users, setUsers] = useState([]);
+
+  //Handling insert version database fields
+  const [selectedVersion, setSelectedVersion] = useState(null);
+  const [selectedVersionData, setSelectedVersionData] = useState(null);
+  const [versionNumbers, setVersionNumbers] = useState([]);
+  const [versionData, setVersionData] = useState({
+    changelog: '',
+    dev: '',
+  });
+
   const [imageUri, setImageUri] = useState(null);
   const [changelog, setChangelog] = useState('');
   const [developers, setDevelopers] = useState('');
+
+  const [isUpdate, setIsUpdate] = useState(false);
 
   //Handling insert version errors
   const [isEmptyVersionFields, setIsEmptyVersionFields] = useState(false);
@@ -26,7 +39,7 @@ export default function AdminScreen({ navigation }) {
     setIsEmptyVersionFields(false);
     setIsEmptyVersionImage(false);
     setIsEmptyVersionDevelopers(false);
-  }
+  };
 
   //Timer for the message when insert version is done successfully
   useEffect(() => {
@@ -41,48 +54,45 @@ export default function AdminScreen({ navigation }) {
 
   //Auto refreshing listing recent / all users
   useEffect(() => {
-    const fetchUsersAndRecent = async () => {
-      await fetchRecentUsers();
-      await fetchUsers();
+    const fetchData = async () => {
+      const recentUsers = await fetchRecentUsers();
+      setRecentUsers(recentUsers);
+      const users = await fetchUsers();
+      setUsers(users);
+  
+      const versions = await fetchVersions(); // Fetch the versions
+      setVersionNumbers(versions);
     };
-
-    fetchUsersAndRecent(); // Fetch initial data
-
-    const interval = setInterval(fetchUsersAndRecent, 5000); // Fetch recent users and users every 5 seconds
-
+  
+    fetchData(); // Fetch initial data
+  
+    const interval = setInterval(fetchData, 5000); // Fetch recent users, users, and versions every 5 seconds
+  
     return () => {
       clearInterval(interval); // Clear the interval when the component unmounts
     };
   }, []);
 
-  //Request that list recent users (limit 5)
-  const fetchRecentUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:4444/account/recent');
-      const { users } = response.data;
-      setRecentUsers(users);
-    } catch (error) {
-      console.error('Error fetching recent users:', error);
-    }
-  };
+  // Fetch version fields values
+  useEffect(() => {
+    if (selectedVersion) {
+      const fetchSelectedVersionData = async () => {
+        const data = await fetchVersionData(selectedVersion);
+        setSelectedVersionData(data);
+      };
 
-  //Request that list all users
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:4444/account/list');
-      setUsers(response.data);
-    } catch (error) {
-      console.error('Error fetching users:', error);
+      fetchSelectedVersionData();
     }
-  };
+  }, [selectedVersion]);
+  
+  
 
   //Request handling user admin Yes/No
   const toggleAdmin = async (mail, admin) => {
     try {
-      // Send a request to update the admin value for the user
-      await axios.put('http://localhost:4444/account/update/admin', { mail, admin });
-      // Fetch the recent users to update the list
-      fetchUsers();
+      await updateAdmin(mail, admin); // Call the updateAdmin function from api.js
+      const updatedUsers = await fetchUsers(); // Fetch the updated list of users
+      setUsers(updatedUsers);
     } catch (error) {
       console.error('Error toggling admin:', error);
     }
@@ -107,79 +117,52 @@ export default function AdminScreen({ navigation }) {
     });
   };
 
-  //Request handling Image import Client --> Server
-  const handleImageUpload = async () => {
-
-    //Handling errors/crashes when empty fields
-    if(!imageUri && (changelog === null || changelog === '')) {
+  // Request handling Image import Client --> Server
+  const handleImageUploadWrapper = async () => {
+    if (!imageUri && (changelog === null || changelog === '') && (developers === null || developers === '')) {
       setIsEmptyVersionChangelog(false);
       setIsEmptyVersionImage(false);
+      setIsEmptyVersionDevelopers(false);
       setIsEmptyVersionFields(true);
       return;
     } else if (!imageUri) {
       setIsEmptyVersionChangelog(false);
       setIsEmptyVersionFields(false);
+      setIsEmptyVersionDevelopers(false);
       setIsEmptyVersionImage(true);
       return;
     } else if (changelog === null || changelog === '') {
       setIsEmptyVersionFields(false);
       setIsEmptyVersionImage(false);
+      setIsEmptyVersionDevelopers(false);
       setIsEmptyVersionChangelog(true);
+      return;
+    } else if (developers === null || developers === '') {
+      setIsEmptyVersionChangelog(false);
+      setIsEmptyVersionFields(false);
+      setIsEmptyVersionImage(false);
+      setIsEmptyVersionDevelopers(true);
       return;
     } else {
       resetErrors();
       setShowSuccessMessage(true);
     }
-
-    try {
-      const formData = new FormData();
   
-      const selectedImage = await fetch(imageUri);
-      const imageBlob = await selectedImage.blob(); //Retrieve image data as needed for the server
-
-      formData.append('file', imageBlob, 'image.jpg');
-
-      const response = await axios.post('http://localhost:4444/upload', formData);
-      if (response.status === 200) {
-        console.log('File uploaded successfully');
-        insertVersionData(changelog, response.data.filename); // Pass the filename to insertVersionData
-        setImageUri(null); // Reset imageUri field to empty
-        setChangelog(''); // Reset changelog field to empty
-      } else {
-        console.log('Error uploading file');
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
+    await handleImageUpload(imageUri, changelog, developers, setImageUri, setChangelog, setDevelopers);
   };
-
-  //Request that insert a new version in Db
-  const insertVersionData = async (changelog, dev, image) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:4444/versions/insert',
-        {
-          changelog, 
-          dev,
-          image,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      
-      if (response.status === 200) {
-        console.log('Version data inserted successfully!');
-      } else {
-        console.log('Error inserting version data!');
-      }
-    } catch (error) {
-      console.error('Error inserting version data:', error);
+  
+  const handlePickerChange = (value) => {
+    setIsUpdate(value);
+    if (value === 'Update' && versionNumbers.length > 0) {
+      setSelectedVersion(versionNumbers[0].toString());
+    } else {
+      setSelectedVersion(null);
+      setSelectedVersionData(null);
     }
   };
 
   return (
-    <View style={[styles.background, styles.flexOne, styles.row]}>
+    <View style={[styles.background, styles.flexOne, styles.row, styles.alignItems, styles.justifyContent]}>
       <View style={[styles.recentUsersContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
         <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Comptes récents</Text>
         <View style={styles.littleBr}>
@@ -191,6 +174,116 @@ export default function AdminScreen({ navigation }) {
           ))}
         </View>
         <View style={styles.mediumBr} />
+      </View>
+      <View style={[styles.insertVersionContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
+        <View>
+          <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Gestion version</Text>
+        </View>
+        <View style={styles.littleBr} />
+        <View style={styles.divider} />
+        <View style={[styles.justifyContent, styles.row]}>
+          <View>
+            <Picker
+              style={[styles.title, styles.bold, styles.textAlign]}
+              selectedValue={isUpdate}
+              onValueChange={handlePickerChange}
+            >
+              <Picker.Item label="Créer" value="Créer" />
+              <Picker.Item label="Update" value="Update" />
+            </Picker>
+            {isUpdate === 'Update' && (
+              <Picker
+                style={[styles.title, styles.bold, styles.textAlign]}
+                selectedValue={selectedVersion}
+                onValueChange={(value) => setSelectedVersion(value)}
+              >
+                {versionNumbers.map((version) => (
+                  <Picker.Item key={version} label={version.toString()} value={version.toString()} />
+                ))}
+              </Picker>
+            )}
+          </View>
+        </View>
+        <View style={[styles.mediumBr, styles.justifyContent]} />
+        <View style={[styles.versionEditorContainer, styles.alignItems, {flexDirection: 'column', justifyContent: 'center'}]}>
+          <View style={[styles.editorSubView ,styles.row]}>
+            <View style={[styles.versionChangelogEditor, styles.alignItems]}>
+              {isUpdate === 'Update' ?
+                <View style={{width: '100%', height: '100%'}}>
+                  <TextInput
+                    style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
+                    placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
+                    placeholderTextColor="black"
+                    multiline={true}
+                    value={selectedVersionData ? selectedVersionData.changelog : ''}
+                  />
+                  <View style={styles.littleBr} />
+                  <TextInput
+                    style={[styles.versionDevBox, styles.boxShadow, styles.white]}
+                    placeholder="Développeur site internet : BOISSEAU Romain"
+                    placeholderTextColor="black"
+                    multiline={true}
+                    value={selectedVersionData ? selectedVersionData.dev : ''}
+                  />
+                </View>
+              :
+                <View style={{width: '100%', height: '100%'}}>
+                  <TextInput
+                    style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
+                    placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
+                    placeholderTextColor="black"
+                    multiline={true}
+                    value={changelog}
+                    onChangeText={(text) => setChangelog(text)}
+                  />
+                  <View style={styles.littleBr} />
+                  <TextInput
+                    style={[styles.versionDevBox, styles.boxShadow, styles.white]}
+                    placeholder="Développeur site internet : BOISSEAU Romain"
+                    placeholderTextColor="black"
+                    multiline={true}
+                    value={developers}
+                    onChangeText={(text) => setDevelopers(text)}
+                  />
+                </View>
+              }
+            </View>
+            <View style={[styles.versionImageImport, styles.verticalAlign, styles.alignItems, styles.justifyContent]}>
+              <TouchableOpacity style={[styles.alignItems, styles.justifyContent, styles.selectPos]} onPress={handleImagePicker}>
+                <Text style={[styles.green, styles.textShadow]}>Select Image</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.versionImagePreview, styles.justifyContent, styles.alignItems, styles.boxShadow]}>
+              {isUpdate === 'Update' && selectedVersionData && selectedVersionData.image ? (
+                <Image source={require(`../../assets/versions/${selectedVersionData.image}`)} style={styles.imagePreview} />
+              ) : (
+                <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+              )}
+            </View>
+          </View>
+          <Text style={[ [styles.bold, styles.textShadow, [
+            isEmptyVersionFields ||
+            isEmptyVersionImage ||
+            isEmptyVersionChangelog ||
+            isEmptyVersionDevelopers ? [styles.red] : showSuccessMessage ? [styles.green] : null
+          ]]]}>
+            {isEmptyVersionFields 
+              ? 'Veuillez mettre un changelog, développeurs et une image'
+              : isEmptyVersionImage
+              ? 'Veuillez insérer une image'
+              : isEmptyVersionChangelog
+              ? 'Veuillez insérer un changelog'
+              : isEmptyVersionDevelopers
+              ? 'Veuillez insérer des développeurs'
+              : showSuccessMessage
+              ? 'Version insérée avec succès'
+              : null}
+          </Text>
+          <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
+            <Button title="Valider" color="grey" onPress={handleImageUploadWrapper}/>
+          </View>
+        </View>
+        <View style={styles.littleBr} />
       </View>
       <View style={[styles.handleAdminContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
         <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Gestion rôle admin</Text>
@@ -252,55 +345,6 @@ export default function AdminScreen({ navigation }) {
             </View>
           ) : null
         )}
-        <View style={styles.br} />
-      </View>
-      <View style={[styles.insertVersionContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
-        <View>
-          <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Création de version</Text>
-        </View>
-        <View style={styles.littleBr} />
-        <View style={styles.divider} />
-        <View style={[styles.mediumBr, styles.justifyContent]} />
-        <View style={[styles.versionEditorContainer, styles.alignItems, {flexDirection: 'column', justifyContent: 'center'}]}>
-          <View style={[styles.editorSubView ,styles.row]}>
-            <View style={[styles.versionChangelogEditor, styles.alignItems]}>
-              <TextInput
-                style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
-                placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
-                placeholderTextColor="black"
-                multiline={true}
-                value={changelog}
-                onChangeText={(text) => setChangelog(text)}
-              />
-            </View>
-            <View style={[styles.versionImageImport, styles.verticalAlign, styles.alignItems, styles.justifyContent]}>
-                <TouchableOpacity style={[styles.alignItems, styles.justifyContent, styles.selectPos]} onPress={handleImagePicker}>
-                  <Text style={[styles.green, styles.textShadow]}>Select Image</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={[styles.versionImagePreview, styles.justifyContent, styles.alignItems, styles.boxShadow]}>
-              {imageUri && <Image source={{uri: imageUri}} style={styles.imagePreview} />}
-            </View>
-          </View>
-          <Text style={[ [styles.bold, styles.textShadow, [
-            isEmptyVersionFields ||
-            isEmptyVersionImage ||
-            isEmptyVersionChangelog ? [styles.red] : showSuccessMessage ? [styles.green] : null
-          ]]]}>
-            {isEmptyVersionFields 
-              ? 'Veuillez mettre un changelog et une image'
-              : isEmptyVersionImage
-              ? 'Veuillez insérer une image'
-              : isEmptyVersionChangelog
-              ? 'Veuillez insérer un changelog'
-              : showSuccessMessage
-              ? 'Version insérée avec succès'
-              : null}
-          </Text>
-          <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
-            <Button title="Valider" color="grey" onPress={handleImageUpload}/>
-          </View>
-        </View>
         <View style={styles.br} />
       </View>
     </View>

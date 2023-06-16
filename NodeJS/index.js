@@ -262,33 +262,56 @@ app.get('/versions/date/:version', function (req, res) {
 
 app.put('/version/update/:version', jsonParser, (req, res) => {
   const versionNumber = req.params.version;
-  const { changelog, image } = req.body;
+  const { changelog, dev, image } = req.body;
   const dbConnect = dbo.getDb();
 
   const updateData = {};
   if (changelog) {
     updateData.changelog = changelog;
   }
+  if (dev) {
+    updateData.dev = dev;
+  }
   if (image) {
     updateData.image = image;
   }
 
-  dbConnect.collection('versions').updateOne(
-    { version: versionNumber },
-    { $set: updateData },
-    (err, result) => {
+  const deletePreviousImage = (imageName) => {
+    const imagePath = '../React/PenalityBox/assets/versions/' + imageName;
+    fs.unlink(imagePath, (err) => {
       if (err) {
-        res.status(400).send('Error updating version data!');
-      } else {
-        if (result.modifiedCount === 1) {
-          res.status(200).send('Version data updated successfully!');
-        } else {
-          res.status(404).send(`Version ${versionNumber} not found!`);
-        }
+        console.error('Error deleting previous image:', err);
       }
+    });
+  };
+
+  dbConnect.collection('versions').findOne({ version: versionNumber }, (err, version) => {
+    if (err) {
+      res.status(400).send('Error finding version!');
+    } else {
+      const previousImage = version?.image || null;
+      dbConnect.collection('versions').updateOne(
+        { version: versionNumber },
+        { $set: updateData },
+        (err, result) => {
+          if (err) {
+            res.status(400).send('Error updating version data!');
+          } else {
+            if (result.modifiedCount === 1) {
+              if (image && previousImage) {
+                deletePreviousImage(previousImage);
+              }
+              res.status(200).send('Version data updated successfully!');
+            } else {
+              res.status(404).send(`Version ${versionNumber} not found!`);
+            }
+          }
+        }
+      );
     }
-  );
+  });
 });
+
 
 
 app.post("/versions/insert", jsonParser, (req, res) => {
@@ -367,6 +390,23 @@ app.get('/versions/changelog/:version', function (req, res) {
     } else {
       if (result) {
         res.json({ changelog: result.changelog });
+      } else {
+        res.status(400).send('Version not found!');
+      }
+    }
+  });
+});
+
+app.get('/versions/developer/:version', function (req, res) {
+  const { version } = req.params;
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection('versions').findOne({ version }, function (err, result) {
+    if (err) {
+      res.status(400).send('Error fetching version!');
+    } else {
+      if (result) {
+        res.json({ dev: result.dev });
       } else {
         res.status(400).send('Version not found!');
       }

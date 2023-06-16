@@ -506,19 +506,19 @@ const styles = {
 
     versionContainer: {
         width: '60%',
-        height: '70%',
+        height: '85%',
         flexDirection: 'row',
         borderRadius: 7,
         borderColor: '#736C6C',
     },
 
     versionTextContainer: {
-        width: '60%',
+        width: '55%',
         height: '100%',
     },
 
     versionImageContainer: {
-        width: '40%',
+        width: '50%',
         height: '100%',
     },
 
@@ -532,7 +532,14 @@ const styles = {
 
     versionChangelogContainer: {
         width: '100%',
-        height: '80%',
+        height: '45%',
+        marginLeft: '2%',
+        marginRight: '1%',
+    },
+
+    versionDeveloperContainer: {
+        width: '100%',
+        height: '35%',
         marginLeft: '2%',
         marginRight: '1%',
     },
@@ -552,7 +559,22 @@ const styles = {
 
      - Container
 
+     ---------------------
+
+     - Image
+
     */
+
+     versionLogo: {
+        width: '60%',
+        height: '60%',
+     },
+
+     /*
+
+      - Image
+
+     */
 
 /*
 
@@ -681,7 +703,13 @@ const styles = {
 
       versionChangelogBox: {
         width: '100%',
-        height: '100%',
+        height: '50%',
+        borderWidth: 1,
+        borderColor: 'white'
+      },
+      versionDevBox: {
+        width: '100%',
+        height: '50%',
         borderWidth: 1,
         borderColor: 'white'
       },
