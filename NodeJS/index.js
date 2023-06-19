@@ -260,55 +260,69 @@ app.get('/versions/date/:version', function (req, res) {
   });
 });
 
-app.put('/version/update/:version', jsonParser, (req, res) => {
+app.put('/versions/update/:version', jsonParser, (req, res) => {
   const versionNumber = req.params.version;
   const { changelog, dev, image } = req.body;
   const dbConnect = dbo.getDb();
 
   const updateData = {};
-  if (changelog) {
-    updateData.changelog = changelog;
-  }
-  if (dev) {
-    updateData.dev = dev;
-  }
-  if (image) {
-    updateData.image = image;
+
+  if (changelog && changelog.changelog) {
+    updateData.changelog = changelog.changelog;
   }
 
-  const deletePreviousImage = (imageName) => {
-    const imagePath = '../React/PenalityBox/assets/versions/' + imageName;
-    fs.unlink(imagePath, (err) => {
-      if (err) {
-        console.error('Error deleting previous image:', err);
-      }
-    });
-  };
+  if (dev && dev.dev) {
+    updateData.dev = dev.dev;
+  }
+
+  if (image && image.image) {
+    updateData.image = image.image;
+  }
 
   dbConnect.collection('versions').findOne({ version: versionNumber }, (err, version) => {
     if (err) {
-      res.status(400).send('Error finding version!');
-    } else {
-      const previousImage = version?.image || null;
-      dbConnect.collection('versions').updateOne(
-        { version: versionNumber },
-        { $set: updateData },
-        (err, result) => {
-          if (err) {
-            res.status(400).send('Error updating version data!');
-          } else {
-            if (result.modifiedCount === 1) {
-              if (image && previousImage) {
-                deletePreviousImage(previousImage);
-              }
-              res.status(200).send('Version data updated successfully!');
-            } else {
-              res.status(404).send(`Version ${versionNumber} not found!`);
-            }
-          }
-        }
-      );
+      console.error('Error finding version:', err);
+      res.status(500).send('Internal server error.');
+      return;
     }
+
+    if (!version) {
+      res.status(404).send(`Version ${versionNumber} not found!`);
+      return;
+    }
+
+    const previousImage = version.image || null;
+
+    dbConnect.collection('versions').updateOne(
+      { version: versionNumber },
+      { $set: updateData },
+      (err, result) => {
+        if (err) {
+          console.error('Error updating version data:', err);
+          res.status(500).send('Internal server error.');
+          return;
+        }
+
+        if (result.modifiedCount === 1) {
+          if (image && previousImage) {
+            // Make a DELETE request to delete the previous image
+            axios
+              .delete('http://localhost:4444/delete/image', { data: { image: previousImage } })
+              .then(() => {
+                res.status(200).send('Version data updated successfully!');
+              })
+              .catch((error) => {
+                console.error('Error deleting previous image:', error);
+                res.status(500).send('Error deleting previous image!');
+              });
+          } else {
+            res.status(200).send('Version data updated successfully!');
+          }
+        } else {
+          res.status(404).send(`Version ${versionNumber} not found!`);
+        }
+      }
+    );
   });
 });
 
@@ -1341,6 +1355,23 @@ app.post('/upload', function (req, res, next) {
       return res.status(200).json({ message: 'File uploaded successfully', filename: req.file.filename });
     } else {
       return res.status(500).json({ message: 'Error uploading file' });
+    }
+  });
+});
+
+app.delete('/delete/image', (req, res) => {
+  const { image } = req.body;
+  if (!image) {
+    return res.status(400).send('Image parameter is required!');
+  }
+
+  const imagePath = '../React/PenalityBox/assets/versions/' + image;
+  fs.unlink(imagePath, (err) => {
+    if (err) {
+      console.error('Error deleting image:', err);
+      res.status(500).send('Error deleting image!');
+    } else {
+      res.status(200).send('Image deleted successfully!');
     }
   });
 });

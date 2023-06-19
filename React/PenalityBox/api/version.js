@@ -81,15 +81,66 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
       return {};
     }
   };
+  
+  export const deleteImage = image => {
+    axios
+      .delete('http://localhost:4444/delete/image', { data: { image: image } })
+      .then(response => {
+        console.log(response.data); // Image deleted successfully!
+        // Additional logic or state updates after successful deletion
+      })
+      .catch(error => {
+        console.error(error);
+        // Handle error
+      });
+  };
 
-  export const updateVersionData = async (version, data) => {
-    try {
-      const response = await axios.put(`http://localhost:4444/versions/update/${version}`, data);
-      return response.data;
-    } catch (error) {
-      console.error('Error updating version data:', error);
-      throw error;
-    }
+  // Function to perform the update request
+  export const performUpdate = (versionNumber, updateData) => {
+    axios
+      .put(`http://localhost:4444/versions/update/${versionNumber}`, updateData)
+      .then(response => {
+        console.log(response.data); // Version data updated successfully!
+        // Additional logic or state updates after successful update
+      })
+      .catch(error => {
+        console.error(error);
+        // Handle error during version update
+      });
   };
   
+  export const updateVersion = (versionNumber, changelog, dev, image) => {
+    const updateData = {
+      ...(changelog && { changelog }),
+      ...(dev && { dev }),
+      ...(image && { image }),
+    };
   
+    // Check if a new image is submitted
+    if (image) {
+      // Retrieve the previous image for deletion
+      axios
+        .get(`http://localhost:4444/versions/${versionNumber}`)
+        .then(response => {
+          const previousImage = response.data.image;
+  
+          // Delete the previous image
+          deleteImage(previousImage)
+            .then(() => {
+              // Update the version data
+              performUpdate(versionNumber, updateData);
+            })
+            .catch(error => {
+              console.error(error);
+              // Handle error during image deletion
+            });
+        })
+        .catch(error => {
+          console.error(error);
+          // Handle error retrieving previous image
+        });
+    } else {
+      // No new image, perform the update directly
+      performUpdate(versionNumber, updateData);
+    }
+  };

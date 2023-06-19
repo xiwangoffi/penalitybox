@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, Image, Button, Picker } from '
 import styles from '../../styles/styles';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { fetchRecentUsers, fetchUsers, updateAdmin } from '../../api/account';
-import { handleImageUpload, fetchVersions, fetchVersionData } from '../../api/version';
+import { handleImageUpload, fetchVersions, fetchVersionData, updateVersion } from '../../api/version';
 
 export default function AdminScreen({ navigation }) {
 
@@ -153,6 +153,7 @@ export default function AdminScreen({ navigation }) {
   
   const handlePickerChange = (value) => {
     setIsUpdate(value);
+    setImageUri(null);
     if (value === 'Update' && versionNumbers.length > 0) {
       setSelectedVersion(versionNumbers[0].toString());
     } else {
@@ -160,6 +161,30 @@ export default function AdminScreen({ navigation }) {
       setSelectedVersionData(null);
     }
   };
+
+  const handleUpdateVersionData = async () => {
+    if (!selectedVersion || !selectedVersionData) {
+      return;
+    }
+  
+    try {
+      const data = {
+        changelog: selectedVersionData.changelog,
+        dev: selectedVersionData.dev,
+        image: imageUri, // Add the image URI to the data object
+      };
+  
+      console.log('Data: ',data.dev);
+      await updateVersion(selectedVersion, data);
+      // Handle success or perform any additional actions
+      console.log('Version data updated successfully');
+  
+    } catch (error) {
+      console.error('Error updating version data:', error);
+      // Handle error or show error message
+    }
+  };
+  
 
   return (
     <View style={[styles.background, styles.flexOne, styles.row, styles.alignItems, styles.justifyContent]}>
@@ -209,23 +234,25 @@ export default function AdminScreen({ navigation }) {
           <View style={[styles.editorSubView ,styles.row]}>
             <View style={[styles.versionChangelogEditor, styles.alignItems]}>
               {isUpdate === 'Update' ?
-                <View style={{width: '100%', height: '100%'}}>
-                  <TextInput
-                    style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
-                    placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
-                    placeholderTextColor="black"
-                    multiline={true}
-                    value={selectedVersionData ? selectedVersionData.changelog : ''}
-                  />
-                  <View style={styles.littleBr} />
-                  <TextInput
-                    style={[styles.versionDevBox, styles.boxShadow, styles.white]}
-                    placeholder="Développeur site internet : BOISSEAU Romain"
-                    placeholderTextColor="black"
-                    multiline={true}
-                    value={selectedVersionData ? selectedVersionData.dev : ''}
-                  />
-                </View>
+              <View style={{ width: '100%', height: '100%' }}>
+                <TextInput
+                  style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
+                  placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
+                  placeholderTextColor="black"
+                  multiline={true}
+                  value={selectedVersionData ? selectedVersionData.changelog : ''}
+                  onChangeText={(text) => setSelectedVersionData({ ...selectedVersionData, changelog: text })}
+                />
+                <View style={styles.littleBr} />
+                <TextInput
+                  style={[styles.versionDevBox, styles.boxShadow, styles.white]}
+                  placeholder="Développeur site internet : BOISSEAU Romain"
+                  placeholderTextColor="black"
+                  multiline={true}
+                  value={selectedVersionData ? selectedVersionData.dev : ''}
+                  onChangeText={(text) => setSelectedVersionData({ ...selectedVersionData, dev: text })}
+                />
+              </View>
               :
                 <View style={{width: '100%', height: '100%'}}>
                   <TextInput
@@ -255,7 +282,11 @@ export default function AdminScreen({ navigation }) {
             </View>
             <View style={[styles.versionImagePreview, styles.justifyContent, styles.alignItems, styles.boxShadow]}>
               {isUpdate === 'Update' && selectedVersionData && selectedVersionData.image ? (
-                <Image source={require(`../../assets/versions/${selectedVersionData.image}`)} style={styles.imagePreview} />
+                imageUri ? (
+                  <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                ) : (
+                  <Image source={require(`../../assets/versions/${selectedVersionData.image}`)} style={styles.imagePreview} />
+                )
               ) : (
                 <Image source={{ uri: imageUri }} style={styles.imagePreview} />
               )}
@@ -280,7 +311,7 @@ export default function AdminScreen({ navigation }) {
               : null}
           </Text>
           <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
-            <Button title="Valider" color="grey" onPress={handleImageUploadWrapper}/>
+            <Button title="Valider" color="grey" onPress={isUpdate === 'Update' ? handleUpdateVersionData : handleImageUploadWrapper} />
           </View>
         </View>
         <View style={styles.littleBr} />
