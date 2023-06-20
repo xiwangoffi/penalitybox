@@ -97,6 +97,9 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
 
   // Function to perform the update request
   export const performUpdate = (versionNumber, updateData) => {
+    console.log('Just before performing update, check versionNumber and updateData');
+    console.log('versionNumber: ', versionNumber);
+    console.log('updateData: ', updateData);
     axios
       .put(`http://localhost:4444/versions/update/${versionNumber}`, updateData)
       .then(response => {
@@ -111,11 +114,14 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
   
   export const updateVersion = (versionNumber, changelog, dev, image) => {
     const updateData = {
-      ...(changelog && { changelog }),
+      changelog: changelog,
       ...(dev && { dev }),
       ...(image && { image }),
     };
   
+    console.log('Check dev value: ', dev);
+    console.log('Check changelog value: ', changelog);
+    console.log('Check image value: ', image);
     // Check if a new image is submitted
     if (image) {
       // Retrieve the previous image for deletion
@@ -128,18 +134,22 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
           deleteImage(previousImage)
             .then(() => {
               // Update the version data
+              console.log('Delete image supposed to happens here');
               performUpdate(versionNumber, updateData);
             })
             .catch(error => {
+              console.log('Error deleting image');
               console.error(error);
               // Handle error during image deletion
             });
         })
         .catch(error => {
+          console.log('Error server response');
           console.error(error);
           // Handle error retrieving previous image
         });
     } else {
+      console.log('Classic update insert');
       // No new image, perform the update directly
       performUpdate(versionNumber, updateData);
     }

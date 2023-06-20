@@ -15,10 +15,6 @@ export default function AdminScreen({ navigation }) {
   const [selectedVersion, setSelectedVersion] = useState(null);
   const [selectedVersionData, setSelectedVersionData] = useState(null);
   const [versionNumbers, setVersionNumbers] = useState([]);
-  const [versionData, setVersionData] = useState({
-    changelog: '',
-    dev: '',
-  });
 
   const [imageUri, setImageUri] = useState(null);
   const [changelog, setChangelog] = useState('');
@@ -174,7 +170,7 @@ export default function AdminScreen({ navigation }) {
         image: imageUri, // Add the image URI to the data object
       };
   
-      console.log('Data: ',data.dev);
+      console.log('Data (before calling updateVersion): ', data);
       await updateVersion(selectedVersion, data);
       // Handle success or perform any additional actions
       console.log('Version data updated successfully');

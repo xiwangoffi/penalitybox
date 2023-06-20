@@ -323,25 +323,31 @@ const styles = {
 
 */
 
-    footer: {
-        width: '40%',
-        height: '10%',
-        backgroundColor: '#837A7A',
-        position: 'absolute',
-        bottom: 0,
-        flexDirection : 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderTopWidth: 5,
-        borderColor: 'black',
-        borderRadius: 3,
-    },
-
-    logo: {
-        width: 190,
-        height: 53,
-        marginHorizontal: 150,
-    },
+footer: {
+    width: '40%',
+    height: 70,
+    backgroundColor: '#837A7A',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 5,
+    borderColor: 'black',
+    borderRadius: 3,
+    position: 'absolute',
+    bottom: 0,
+  },
+  
+  footerItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  logo: {
+    width: 190,
+    height: 53,
+    marginHorizontal: 20,
+  },
 
 /*
 
@@ -744,6 +750,63 @@ const styles = {
 /*
 
  - CSS Admin.js
+
+ ---------------------
+
+ - CSS Appli.js
+
+*/
+
+    /*
+
+     - Container
+
+    */
+
+     scrollContainer: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingBottom: 100,
+    },
+
+    footerWrapper: {
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+    },
+
+    textContainer: {
+        width: '60%',
+        height: '98%',
+        marginTop: '2%',
+        backgroundColor: 'brown',
+    },
+
+     /*
+
+     - Container
+
+     --------------
+
+     - Text
+
+    */
+
+    text: {
+        fontSize: 42,
+        marginBottom: 20,
+    },
+
+    /*
+
+     - Text
+
+    */
+
+/*
+
+ - CSS Appli.js
 
 */
 

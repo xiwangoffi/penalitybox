@@ -279,13 +279,14 @@ app.put('/versions/update/:version', jsonParser, (req, res) => {
     updateData.image = image.image;
   }
 
-  dbConnect.collection('versions').findOne({ version: versionNumber }, (err, version) => {
+  console.log('Version Number (SERVER SIDE): ', versionNumber);
+  dbConnect.collection('versions').findOne({ version: versionNumber.toString() }, (err, version) => {
     if (err) {
       console.error('Error finding version:', err);
       res.status(500).send('Internal server error.');
       return;
     }
-
+  
     if (!version) {
       res.status(404).send(`Version ${versionNumber} not found!`);
       return;
