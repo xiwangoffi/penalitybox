@@ -157,7 +157,7 @@ const styles = {
         marginLeft: '1%',
     },
 
-    imageContainer: {
+    homeImageContainer: {
         verticalAlign: 'center',
         width: '30%',
         height: '100%',
@@ -763,10 +763,10 @@ footer: {
 
     */
 
-     scrollContainer: {
+    scrollContainer: {
         flexGrow: 1,
         alignItems: 'center',
-        paddingBottom: 100,
+        paddingBottom: 125, //Space between Content container and Footer
     },
 
     footerWrapper: {
@@ -776,11 +776,20 @@ footer: {
         width: '100%',
     },
 
-    textContainer: {
+    mainContainer: {
         width: '60%',
         height: '98%',
         marginTop: '2%',
-        backgroundColor: 'brown',
+    },
+
+    appTextContainer: {
+        marginTop: '2%',
+        width: '100%',
+    },
+
+    appImageContainer: {
+        alignItems: 'center',
+        marginTop: 10,
     },
 
      /*
@@ -793,16 +802,48 @@ footer: {
 
     */
 
-    text: {
-        fontSize: 42,
+    appTextSpaceBetween: {
         marginBottom: 20,
+    },
+
+    appTextTitle: {
+        fontSize: 42,
+    },
+
+    appSubText: {
+        fontSize: 36,
+    },
+
+    sequenceText: {
+        marginLeft: '4%',
+    },
+
+    appTextPosAdjust: {
+        marginRight: '2%',
+        marginLeft: '2%',
     },
 
     /*
 
      - Text
 
+     ------------------
+
+     - Image
+
     */
+
+    panelImage: {
+        width: '60%',
+        height: undefined, // Set the height to undefined to maintain aspect ratio
+        aspectRatio: 2, // Adjust the aspect ratio as per your image dimensions
+    },
+
+     /*
+
+     - Image
+
+     */
 
 /*
 

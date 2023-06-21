@@ -46,7 +46,7 @@ export default function HomeScreen({navigation}) {
                             <Image source={require('../../assets/gif/penalityBox.gif')} resizeMode='contain' style={styles.penalityBoxGIF} alt='PenalityBox gif demo'/>
                         </View>
                     </View>
-                    <View style={styles.imageContainer}>
+                    <View style={styles.homeImageContainer}>
                         <Image source={require('../../assets/img/logoPenalityBoxDark.png')} style={styles.penalityLogo} resizeMode='contain' alt='PenalityBox Logo'/>
                     </View>
                 </View>
