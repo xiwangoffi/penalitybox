@@ -5,11 +5,12 @@ import Footer from './footer';
 import styles from '../styles/styles';
 
 import axios from 'axios'; //axios library for nodejs requests
+import LegalInfo from './Legal';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function Login({ navigation, setIsConnected, checkAdminStatus, handleEmailChange }) {
+export default function Login({ setIsConnected, checkAdminStatus, handleEmailChange }) {
   const [mail, setEmail] = useState(''); // user mail
   const [password, setPassword] = useState(''); //user password
 
@@ -35,6 +36,8 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
 
   const [resetToken, setResetToken] = useState(''); //handle reset token
   const [newPassword, setNewPassword] = useState(''); //handle new user password
+
+  const [showLegalInfos, setShowLegalInfos] = useState(false);
 
 
   //Hover method
@@ -217,6 +220,8 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
         <Text>Login Screen for Phone</Text>
       </View>
     );
+  } else if (showLegalInfos){
+    return <LegalInfo setShowLegalInfos={setShowLegalInfos} />
   } else {
     return (
       //Handle PC log-in screen
@@ -390,7 +395,7 @@ export default function Login({ navigation, setIsConnected, checkAdminStatus, ha
             </View>
           ) : null}
         </View>
-        <Footer navigation={navigation} />
+        <Footer setShowLegalInfos={setShowLegalInfos}/>
       </View>
     );
   }

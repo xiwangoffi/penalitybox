@@ -4,11 +4,12 @@ import { View, Text, Image, Dimensions, Picker } from 'react-native';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 import { fetchVersions, fetchVersionData } from '../../api/version'; // Import the updated functions
+import LegalInfo from '../../components/Legal';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function VersionScreen({ navigation }) {
+export default function VersionScreen() {
   const [dimensions, setDimensions] = useState({
     window: windowDimensions,
     screen: screenDimensions,
@@ -20,25 +21,20 @@ export default function VersionScreen({ navigation }) {
   const [developers, setDevelopers] = useState('');
   const [image, setImage] = useState(null);
 
+  const [showLegalInfos, setShowLegalInfos] = useState(false);
+
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
       setDimensions({ window, screen });
     });
 
     fetchVersionsData();
-
-    const interval = setInterval(fetchVersionsData, 5000); // Fetch versions every 5 seconds
-
-    return () => {
-      subscription?.remove();
-      clearInterval(interval);
-    };
   }, []);
 
   const fetchVersionsData = async () => {
     const versionsData = await fetchVersions();
     setVersions(versionsData);
-  
+
     if (versionsData.length === 0) {
       setSelectedVersion('');
       setDate('');
@@ -58,8 +54,6 @@ export default function VersionScreen({ navigation }) {
     }
   };
   
-  
-
   const handleVersionChange = async (version) => {
     setSelectedVersion(version);
 
@@ -77,6 +71,8 @@ export default function VersionScreen({ navigation }) {
         <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Version Screen</Text>
       </View>
     );
+  } else if (showLegalInfos){
+    return <LegalInfo setShowLegalInfos={setShowLegalInfos} />
   } else {
     return (
       <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
@@ -98,11 +94,11 @@ export default function VersionScreen({ navigation }) {
               </View>
             </View>
             <View style={styles.versionChangelogContainer}>
-              <ReactMarkdownDisplay style={{ body: { color: 'white' } }}>{changelog}</ReactMarkdownDisplay>
+              <ReactMarkdownDisplay style={{ body: { color: 'white', fontSize: 16 } }}>{changelog}</ReactMarkdownDisplay>
             </View>
             <View style={styles.versionDeveloperContainer}>
               <Text style={[styles.title, styles.bold, styles.white]}>Développeurs :</Text>
-              <ReactMarkdownDisplay style={{body: {color: 'white' } }}>{developers}</ReactMarkdownDisplay>
+              <ReactMarkdownDisplay style={{body: {color: 'white', fontSize: 16 } }}>{developers}</ReactMarkdownDisplay>
             </View>
             <View style={styles.versionDateContainer}>
               <View>
@@ -117,7 +113,7 @@ export default function VersionScreen({ navigation }) {
             {image && <Image source={require(`../../assets/versions/${image}`)} style={styles.versionLogo} />}
           </View>
         </View>
-        <Footer navigation={navigation} />
+        <Footer setShowLegalInfos={setShowLegalInfos} />
       </View>
     );
   }

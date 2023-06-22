@@ -4,11 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import styles from '../../styles/styles';
 import Footer from '../../components/footer';
+import LegalInfo from '../../components/Legal';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-export default function ContactScreen({ navigation }) {
+export default function ContactScreen() {
   const [dimensions, setDimensions] = useState({
     window: windowDimensions,
     screen: screenDimensions,
@@ -21,6 +22,8 @@ export default function ContactScreen({ navigation }) {
     sujet: '',
     message: '',
   });
+
+  const [showLegalInfos, setShowLegalInfos] = useState(false);
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener(
@@ -85,6 +88,8 @@ export default function ContactScreen({ navigation }) {
         </View>
       </View>
     );
+  } else if (showLegalInfos) {
+    return <LegalInfo setShowLegalInfos={setShowLegalInfos} />;
   } else {
     return (
       //Gestion PC
@@ -136,7 +141,7 @@ export default function ContactScreen({ navigation }) {
         <View style={[styles.validateButton, styles.boxShadow]}>
           <Button title="Valider" color="grey" onPress={handleSubmit} />
         </View>
-        <Footer navigation={navigation} />
+        <Footer setShowLegalInfos={setShowLegalInfos} />
       </View>
     );
   }

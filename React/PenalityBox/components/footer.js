@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from '../styles/styles';
 
-export default function Footer({ navigation }) {
+export default function Footer({ setShowLegalInfos }) {
   return (
     <View style={styles.footer}>
       <View style={styles.footerItem}>
@@ -17,7 +17,7 @@ export default function Footer({ navigation }) {
       </View>
       <TouchableOpacity
         style={styles.footerItem}
-        onPress={() => navigation.navigate('Accueil')}
+        onPress={() => setShowLegalInfos(prevValue => !prevValue)}
       >
         <Text style={styles.white}>Informations légales</Text>
       </TouchableOpacity>

@@ -1,11 +1,16 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, Text, SafeAreaView, Image } from 'react-native';
+import LegalInfo from '../../components/Legal';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 
-export default function AppScreen({ navigation }) {
+export default function AppScreen() {
+
+  const [showLegalInfos, setShowLegalInfos] = useState(false);
+
   return (
     <SafeAreaView style={[styles.flexOne, styles.background]}>
+    {showLegalInfos ? <LegalInfo setShowLegalInfos={setShowLegalInfos} /> : (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={[styles.mainContainer, styles.boxBackground, styles.boxShadow, styles.alignItems]}>
           <View style={styles.appTextContainer}>
@@ -101,9 +106,10 @@ export default function AppScreen({ navigation }) {
           <View style={styles.br} />
         </View>
         <View style={styles.footerWrapper}>
-          <Footer navigation={navigation} />
+          <Footer setShowLegalInfos={setShowLegalInfos} />
         </View>
       </ScrollView>
+    )}
     </SafeAreaView>
   );
 }

@@ -45,6 +45,10 @@ const styles = {
        textDecoration: 'underline',
     },
 
+    uppercase: {
+        textTransform: 'uppercase',
+    },
+
     verticalBr: {
         marginVertical: '10%',
     },
@@ -519,12 +523,12 @@ footer: {
     },
 
     versionTextContainer: {
-        width: '55%',
+        width: '45%',
         height: '100%',
     },
 
     versionImageContainer: {
-        width: '50%',
+        width: '55%',
         height: '100%',
     },
 
@@ -573,7 +577,8 @@ footer: {
 
      versionLogo: {
         width: '60%',
-        height: '60%',
+        height: undefined, // Set the height to undefined to maintain aspect ratio
+        aspectRatio: 1, // Adjust the aspect ratio as per your image dimensions
      },
 
      /*
@@ -848,6 +853,55 @@ footer: {
 /*
 
  - CSS Appli.js
+
+ --------------------
+
+ - CSS Legal.js
+
+*/
+
+    /*
+
+     - Container
+
+    */
+
+    legalInfoContainer: {
+        width: '70%',
+        height: '62%',
+    },
+
+    /*
+
+     - Container
+
+     --------------
+
+     - Text style
+
+    */
+
+     spaceBetweenText: {
+        paddingTop: '2%',
+     },
+
+     titleEdgeGap: {
+        paddingLeft: '2%',
+     },
+
+     contentEdgeGap: {
+        paddingLeft: '2.5%',
+     },
+
+    /*
+
+     - Text style
+
+    */
+
+/*
+
+ - CSS Legal.js
 
 */
 
