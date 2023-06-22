@@ -56,10 +56,10 @@ export default function MainContainer() {
         <Drawer.Screen name={contactName} component={ContactScreen} />
         <Drawer.Screen name={versionsName} component={VersionsScreen} />
         <Drawer.Screen name={creditsScreen} component={CreditsScreen} />
-        {!isConnected && (
+        {isConnected && (
           <>
             <Drawer.Screen name={appliName} component={AppliScreen} />
-            {!isAdmin && <Drawer.Screen name={adminName} component={AdminScreen} />}
+            {isAdmin && <Drawer.Screen name={adminName} component={AdminScreen} />}
           </>
         )}
         {isConnected ? (
