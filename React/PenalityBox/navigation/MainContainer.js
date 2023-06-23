@@ -11,7 +11,7 @@ import AppliScreen from './screens/Appli';
 import VersionsScreen from './screens/Versions';
 import AdminScreen from './screens/Admin';
 import CreditsScreen from './screens/Credits';
-import LoginModal from '../components/Login';
+import LoginModal from './screens/Login';
 import UserAccount from './screens/UserAccount';
 
 // Screen names

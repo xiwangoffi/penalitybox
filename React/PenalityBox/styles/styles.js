@@ -29,7 +29,7 @@ const styles = {
         shadowRadius: 2,
     },
 
-    textAlign: {
+    textAlignCenter: {
         textAlign: 'center',
     },
 
@@ -87,7 +87,7 @@ const styles = {
         fontSize: 24,
     },
 
-    verticalAlign: {
+    verticalAlignCenter: {
         verticalAlign: 'center',
     },
 
@@ -151,7 +151,6 @@ const styles = {
         borderColor: '#736C6C',
         width: '60%',
         height: '70%',
-        flexDirection: 'row',
     },
 
     contentContainer: {
@@ -162,7 +161,6 @@ const styles = {
     },
 
     homeImageContainer: {
-        verticalAlign: 'center',
         width: '30%',
         height: '100%',
         borderLeftWidth: 2,
@@ -172,9 +170,6 @@ const styles = {
     gifContainer: {
         width: '100%',
         height: '81%',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 
     /*
@@ -210,8 +205,6 @@ const styles = {
 
      contentTitleText: {
         fontSize: 32,
-        fontWeight: 'bold',
-        textDecoration: 'underline',
      },
 
      contentText: {
@@ -287,6 +280,8 @@ const styles = {
 
      - PC Container
 
+        /!\ Also used for Login.js | UserAccount.js /!\
+
     */
 
     informationContainer: {
@@ -313,6 +308,8 @@ const styles = {
 
     /*
 
+        /!\ Also used for Login.js | UserAccount.js /!\
+
      - PC Container
 
     */
@@ -331,20 +328,11 @@ footer: {
     width: '40%',
     height: 70,
     backgroundColor: '#837A7A',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     borderTopWidth: 5,
     borderColor: 'black',
     borderRadius: 3,
     position: 'absolute',
     bottom: 0,
-  },
-  
-  footerItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   
   logo: {
@@ -380,30 +368,15 @@ footer: {
     mainJobContainer: {
         width: '38%',
         height: '65%',
-        flexDirection: 'row',
     },
-
-    textContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    
-    centeredTextContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
 
     jobTextContainer: {
-        flex: 1,
         marginTop: '2.5%',
     },
     
     jobIconsContainer: {
         width: '20%',
         height: '100%',
-        alignItems: 'center',
         justifyContent: 'space-between',
     },
 
@@ -447,8 +420,6 @@ footer: {
 
     phoneCreditsImage: {
         marginTop: '5%',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 
     jobIconsSize: {
@@ -473,7 +444,6 @@ footer: {
 
     jobFont: {
         fontSize: 16,
-        fontWeight: 'bold',
     },
 
     /*
@@ -493,8 +463,6 @@ footer: {
 */
 
     loginOptionContainer: {
-        alignItems: 'center', 
-        justifyContent: 'center', 
         marginTop: '2%',
     },
 
@@ -770,12 +738,10 @@ footer: {
 
     scrollContainer: {
         flexGrow: 1,
-        alignItems: 'center',
         paddingBottom: 125, //Space between Content container and Footer
     },
 
     footerWrapper: {
-        alignItems: 'center',
         position: 'absolute',
         bottom: 0,
         width: '100%',
@@ -793,7 +759,6 @@ footer: {
     },
 
     appImageContainer: {
-        alignItems: 'center',
         marginTop: 10,
     },
 

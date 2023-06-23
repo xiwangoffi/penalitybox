@@ -9,19 +9,19 @@ export default function AppScreen() {
   const [showLegalInfos, setShowLegalInfos] = useState(false);
 
   return (
-    <SafeAreaView style={[styles.flexOne, styles.background]}>
+    <SafeAreaView style={styles.background}>
     {showLegalInfos ? <LegalInfo setShowLegalInfos={setShowLegalInfos} /> : (
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={[styles.scrollContainer, styles.alignItems]}>
         <View style={[styles.mainContainer, styles.boxBackground, styles.boxShadow, styles.alignItems]}>
           <View style={styles.appTextContainer}>
             <View>
-              <Text style={[styles.appTextTitle, styles.appTextSpaceBetween, styles.bold, styles.textAlign, styles.white]}>
+              <Text style={[styles.appTextTitle, styles.appTextSpaceBetween, styles.bold, styles.textAlignCenter, styles.white]}>
                 La Penality Box peut être programmée simplement à{'\n'}
                 l’aide de son clavier 16 touches et de son écran{'\n'}
                 LCD.
               </Text>
             </View>
-            <View style={styles.appImageContainer}>
+            <View style={[styles.appImageContainer, styles.alignItems]}>
               <Image
                 source={require('../../assets/img/penalitybox_panel.png')}
                 style={styles.panelImage}
@@ -95,7 +95,7 @@ export default function AppScreen() {
                 paramètres.
               </Text>
             </View>
-            <View style={styles.appImageContainer}>
+            <View style={[styles.appImageContainer, styles.alignItems]}>
               <Image
                 source={require('../../assets/img/logoPenalityBoxDark.png')}
                 style={styles.panelImage}
@@ -105,7 +105,7 @@ export default function AppScreen() {
           </View>
           <View style={styles.br} />
         </View>
-        <View style={styles.footerWrapper}>
+        <View style={[styles.footerWrapper, styles.alignItems]}>
           <Footer setShowLegalInfos={setShowLegalInfos} />
         </View>
       </ScrollView>

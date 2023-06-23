@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Dimensions, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Footer from './footer';
-import styles from '../styles/styles';
+import Footer from '../../components/footer';
+import styles from '../../styles/styles';
 
 import axios from 'axios'; //axios library for nodejs requests
-import LegalInfo from './Legal';
+import LegalInfo from '../../components/Legal';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
@@ -62,6 +62,18 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
     screen: screenDimensions,
   });
 
+  const resetPasswordErrors = async () => { //Cancel troubleshooting text
+    setIsEmptyPasswordError(false);
+    setIsEmptyResetTokenError(false);
+    setIsResetWrong(false);
+  }
+
+  const resetCredentialsErrors = async () => { //Cancel troubleshooting text
+    setIsLoginEmailEmpty(false);
+    setIsLoginEmpty(false);
+    setIsLoginPasswordEmpty(false);
+  }
+
   const sendResetTokenRequest = async () => { //Reset token handle
 
     if(!mail) { //Troubleshooting
@@ -86,18 +98,15 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
   const resetPasswordRequest = async () => { //Reset password method
 
     if(!newPassword && !resetToken) { //Troubleshooting
-      setIsEmptyPasswordError(false);
-      setIsEmptyResetTokenError(false);
+      resetPasswordErrors();
       setIsResetWrong(true);
       return;
     } else if(!newPassword) {
-      setIsEmptyResetTokenError(false);
-      setIsResetWrong(false);
+      resetPasswordErrors();
       setIsEmptyPasswordError(true);
       return;
     } else if (!resetToken) {
-      setIsEmptyPasswordError(false);
-      setIsResetWrong(false);
+      resetPasswordErrors();
       setIsEmptyResetTokenError(true);
       return;
     }
@@ -121,9 +130,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
       // Handle the response from the server
     } catch (error) {
       setFailedResettingPassword(true);
-      setIsResetWrong(false);
-      setIsEmptyPasswordError(false);
-      setIsEmptyResetTokenError(false);
+      resetPasswordErrors();
       console.error('Error resetting password:', error.message);
     }
   };
@@ -131,19 +138,16 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
   const validateCredentials = async () => { //Log-in method
 
     if(!mail && !password) { //Troubleshooting
+      resetCredentialsErrors();
       setIsLoginEmpty(true);
-      setIsLoginEmailEmpty(false);
-      setIsLoginPasswordEmpty(false);
       return;
     } else if(!mail) {
+      resetCredentialsErrors();
       setIsLoginEmailEmpty(true);
-      setIsLoginEmpty(false);
-      setIsLoginPasswordEmpty(false);
       return;
     } else if(!password) {
+      resetCredentialsErrors();
       setIsLoginPasswordEmpty(true);
-      setIsLoginEmailEmpty(false);
-      setIsLoginEmpty(false);
       return;
     }
 
@@ -155,9 +159,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
       const { success } = response.data;
       setIsConnected(success);
       if (success) {
-        setIsLoginEmailEmpty(false);
-        setIsLoginPasswordEmpty(false);
-        setIsLoginEmpty(false);
+        resetCredentialsErrors();
         setIsResetSuccess(false);
         console.log('User connected successfully');
         checkAdminStatus(mail);
@@ -174,19 +176,16 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
   const insertAccount = async () => { //Account creation method
 
     if(!mail && !password) { //Troubleshooting
+      resetCredentialsErrors();
       setIsLoginEmpty(true);
-      setIsLoginEmailEmpty(false);
-      setIsLoginPasswordEmpty(false);
       return;
     } else if(!mail) {
+      resetCredentialsErrors();
       setIsLoginEmailEmpty(true);
-      setIsLoginEmpty(false);
-      setIsLoginPasswordEmpty(false);
       return;
     } else if(!password) {
+      resetCredentialsErrors();
       setIsLoginPasswordEmpty(true);
-      setIsLoginEmailEmpty(false);
-      setIsLoginEmpty(false);
       return;
     }
 
@@ -196,9 +195,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
         password,
       });
       console.log(response.data);
-      setIsLoginEmailEmpty(false);
-      setIsLoginPasswordEmpty(false);
-      setIsLoginEmpty(false);
+      resetCredentialsErrors();
       setIsAccountCreatedSuccessfully(true);
       setShowSignIn(false);
     } catch (error) {
@@ -231,7 +228,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
             styles.white, 
             styles.bold, 
             styles.title, 
-            styles.textAlign
+            styles.textAlignCenter
           ]}>
           {showSignIn
             ? 'Inscription'
@@ -245,7 +242,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
         <View style={styles.iconContainer}>
           <Icon name="at" size={20} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
             placeholder="E-mail"
             keyboardType="email-address"
             placeholderTextColor="lightgrey"
@@ -256,7 +253,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
           <View style={styles.iconContainer}>
             <Icon name="lock" size={20} color="lightgrey" />
             <TextInput
-              style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
+              style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]}
               placeholder="Mot de passe"
               placeholderTextColor="lightgrey"
               secureTextEntry={true}
@@ -268,21 +265,21 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
           <View>
             <View style={styles.iconContainer}>
               <Icon name="key" size={20} color="lightgrey" />
-              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
+              <TextInput style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
                 placeholder='Jeton de rénitialisation' 
                 value={resetToken} 
                 onChangeText={setResetToken} />
             </View>
             <View style={styles.iconContainer}> 
               <Icon name="lock" size={20} color="lightgrey" />
-              <TextInput style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
+              <TextInput style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.boxBackground, styles.white]} 
                 placeholder='Nouveau mot de passe' 
                 value={newPassword} 
                 onChangeText={setNewPassword} 
                 secureTextEntry />
             </View>
             <View>
-              <Text style={ [ styles.red, styles.textShadow, styles.textAlign ] }>
+              <Text style={ [ styles.red, styles.textShadow, styles.textAlignCenter ] }>
                 {isResetWrong //Si aucun champ n'est rempli
                   ? 'Veuillez remplir les 2 champs !'
                   : isEmptyPasswordError //Si le mot de passe est vide
@@ -338,7 +335,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
             }}
           />
         </View>
-        <View style={showSignIn ? [styles.loginOptionContainer, styles.row] : styles.loginOptionContainer}>
+        <View style={showSignIn ? [styles.alignItems, styles.justifyContent, styles.loginOptionContainer, styles.row] : [styles.alignItems, styles.justifyContent, styles.loginOptionContainer]}>
           {showSignIn || isForgotPassword || hasToChangePassword ? (
             <View style={showSignIn ? [styles.loginOptionContainer, styles.row] : styles.loginOptionContainer}>
               <Text style={[styles.white, styles.underline, isSignUpHovered && [styles.blue, styles.underline]]} 
@@ -360,7 +357,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
             </View>
           ) : null}
           { !isForgotPassword && !showSignIn && !hasToChangePassword ? ( //Displaying options " mot de passe oublié " and " s'incrire " IF user isn't in option to change password or sign-in
-            <View style={showSignIn ? styles.loginOptionContainer : [styles.loginOptionContainer, styles.row] }>
+            <View style={showSignIn ? [styles.alignItems, styles.justifyContent, styles.loginOptionContainer] : [styles.alignItems, styles.justifyContent, styles.loginOptionContainer, styles.row] }>
               <View>
                 <Text style={[styles.white, styles.underline, isPasswordHovered && [styles.blue, styles.underline]]} 
                 onMouseEnter={handlePasswordHoverEnter} 

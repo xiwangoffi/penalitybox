@@ -36,16 +36,16 @@ export default function HomeScreen() {
   } else {
     return (
       <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
-        <View style={[styles.presentationContainer, styles.boxShadow]}>
+        <View style={[styles.presentationContainer, styles.row, styles.boxShadow]}>
           <View style={styles.contentContainer}>
-            <Text style={[styles.contentTitleText, styles.white]}>La PenalityBox</Text>
+            <Text style={[styles.contentTitleText, styles.white, styles.bold, styles.underline]}>La PenalityBox</Text>
             <Text style={[styles.contentText, styles.white]}>
               La Penality Box est un produit fini permettant de gérer les départs et les interruptions de courses ainsi
               que des temps de pénalité infligés par l'arbitrage. Tous les temps, attentes, feux intermédiaires sont
               programmables. Le boîtier est compact et les feux sont dit transflectifs. Le boîtier est également
               télécommandable.
             </Text>
-            <View style={styles.gifContainer}>
+            <View style={[styles.gifContainer, styles.row, styles.alignItems, styles.justifyContent]}>
               <Image
                 source={require('../../assets/gif/penalityBox.gif')}
                 resizeMode="contain"
@@ -54,7 +54,7 @@ export default function HomeScreen() {
               />
             </View>
           </View>
-          <View style={styles.homeImageContainer}>
+          <View style={[styles.homeImageContainer, styles.verticalAlignCenter]}>
             <Image
               source={require('../../assets/img/logoPenalityBoxDark.png')}
               style={styles.penalityLogo}

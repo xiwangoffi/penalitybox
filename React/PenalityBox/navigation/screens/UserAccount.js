@@ -34,22 +34,25 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
     setIsDeleteAccountHovered(false);
   };
 
+  const resetErrors = async () => {
+    setIsUpdateEmpty(false);
+    setIsUpdateNewPasswordEmpty(false);
+    setIsUpdateOldPasswordEmpty(false);
+  }
+
   const updatePassword = async () => { //Update password request
 
     if(!oldPassword && !newPassword) { //Troubleshooting
+      resetErrors();
       setIsUpdateEmpty(true);
-      setIsUpdateNewPasswordEmpty(false);
-      setIsUpdateOldPasswordEmpty(false);
       return;
     } else if(!oldPassword) {
-      setIsUpdateEmpty(false);
-      setIsUpdateNewPasswordEmpty(false);
+      resetErrors();
       setIsUpdateOldPasswordEmpty(true);
       return;
     } else if(!newPassword) {
-      setIsUpdateEmpty(false);
+      resetErrors();
       setIsUpdateNewPasswordEmpty(true);
-      setIsUpdateOldPasswordEmpty(false);
       return;
     }
 
