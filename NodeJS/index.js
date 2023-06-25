@@ -18,6 +18,17 @@ app.use(bodyParser.json());
 
 dbo.connectToServer();
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../React/PenalityBox/assets/versions/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }).single('file');
+
 
 app.get("/", function (req, res) {
   res.send("Hello World!");
@@ -26,7 +37,6 @@ app.get("/", function (req, res) {
 app.listen(port, function () {
   console.log(`App listening on port ${port}!`);
 });
-
 
 app.get("/account/list", function (req, res) {
     const dbConnect = dbo.getDb();
@@ -74,10 +84,6 @@ app.get('/account/admin/get/all', (req, res) => {
   });
 });
 
-
-
-
-
 app.post('/account/login', jsonParser, function (req, res) {
   const { mail, password } = req.body;
   const dbConnect = dbo.getDb();
@@ -100,7 +106,6 @@ app.post('/account/login', jsonParser, function (req, res) {
     }
   });
 });
-
 
 app.post('/account/insert', jsonParser, async (req, res) => {
   const body = req.body;
@@ -126,8 +131,6 @@ app.post('/account/insert', jsonParser, async (req, res) => {
   dbConnect.collection('account').insertOne(newAccount);
   res.json(newAccount);
 });
-
-
 
 app.put('/account/update/password', jsonParser, async (req, res) => {
     const body = req.body;
@@ -260,6 +263,7 @@ app.get('/versions/date/:version', function (req, res) {
   });
 });
 
+/*
 app.put('/versions/update/:version', jsonParser, (req, res) => {
   const versionNumber = req.params.version;
   const { changelog, dev, image } = req.body;
@@ -326,7 +330,39 @@ app.put('/versions/update/:version', jsonParser, (req, res) => {
     );
   });
 });
+*/
 
+app.post('/versions/update/:version', (req, res) => {
+  const body = req.body;
+  console.log('Got body :', body);
+
+  let newFileName = body.Oimage;
+
+  if(body.image !== 'null') {
+    const filePath = `./React/PenalityBox/assets/versions/${body.Oimage}`;
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+      } else {
+        console.log('File deleted successfully');
+      }
+    });
+
+    newFileName = `${Date.now() + path.extname(file.originalname)}`;
+  }
+
+  body.changelog = body.changelog === '' ? body.Ochangelog : body.changelog;
+  body.dev = body.dev === '' ? body.Odev : body.dev;
+
+  console.log('Last Body : ', body);
+
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("versions")
+    .updateOne({ changelog: body.Ochangelog, dev: body.Odev, image: body.Oimage },
+    { $set: { changelog: body.changelog, dev: body.dev, image: body.newFileName} })
+  res.json(body);
+});
 
 
 app.post("/versions/insert", jsonParser, (req, res) => {
@@ -1336,16 +1372,6 @@ app.post('/contact/send', function (req, res) {
 });
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '../React/PenalityBox/assets/versions/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }).single('file');
 
 app.post('/upload', function (req, res, next) {
   upload(req, res, function (err) { // Updated here
@@ -1360,6 +1386,7 @@ app.post('/upload', function (req, res, next) {
   });
 });
 
+/*
 app.delete('/delete/image', (req, res) => {
   const { image } = req.body;
   if (!image) {
@@ -1376,3 +1403,4 @@ app.delete('/delete/image', (req, res) => {
     }
   });
 });
+*/

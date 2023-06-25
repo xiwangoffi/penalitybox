@@ -180,17 +180,16 @@ export default function AdminScreen({ navigation }) {
       // Handle error or show error message
     }
   };
-  
 
   return (
     <View style={[styles.background, styles.flexOne, styles.row, styles.alignItems, styles.justifyContent]}>
       <View style={[styles.recentUsersContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
-        <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Comptes récents</Text>
+        <Text style={[styles.title, styles.bold, styles.white, styles.textAlignCenter]}>Comptes récents</Text>
         <View style={styles.littleBr}>
           <View style={styles.divider} />
           {recentUsers.map((user) => (
             <View style={styles.mediumBr} key={user.id}>
-              <Text style={[styles.white, styles.textAlign]}>{user.mail}</Text>
+              <Text style={[styles.white, styles.textAlignCenter]}>{user.mail}</Text>
             </View>
           ))}
         </View>
@@ -198,14 +197,14 @@ export default function AdminScreen({ navigation }) {
       </View>
       <View style={[styles.insertVersionContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
         <View>
-          <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Gestion version</Text>
+          <Text style={[styles.title, styles.bold, styles.white, styles.textAlignCenter]}>Gestion version</Text>
         </View>
         <View style={styles.littleBr} />
         <View style={styles.divider} />
         <View style={[styles.justifyContent, styles.row]}>
           <View>
             <Picker
-              style={[styles.title, styles.bold, styles.textAlign]}
+              style={[styles.title, styles.bold, styles.textAlignCenter]}
               selectedValue={isUpdate}
               onValueChange={handlePickerChange}
             >
@@ -214,7 +213,7 @@ export default function AdminScreen({ navigation }) {
             </Picker>
             {isUpdate === 'Update' && (
               <Picker
-                style={[styles.title, styles.bold, styles.textAlign]}
+                style={[styles.title, styles.bold, styles.textAlignCenter]}
                 selectedValue={selectedVersion}
                 onValueChange={(value) => setSelectedVersion(value)}
               >
@@ -313,7 +312,7 @@ export default function AdminScreen({ navigation }) {
         <View style={styles.littleBr} />
       </View>
       <View style={[styles.handleAdminContainer, styles.adminPanelContainerPos, styles.boxBackground, styles.boxShadow]}>
-        <Text style={[styles.title, styles.bold, styles.white, styles.textAlign]}>Gestion rôle admin</Text>
+        <Text style={[styles.title, styles.bold, styles.white, styles.textAlignCenter]}>Gestion rôle admin</Text>
         <View style={styles.littleBr}>
           <View style={styles.divider} />
           {users.map((user) =>
@@ -321,7 +320,7 @@ export default function AdminScreen({ navigation }) {
               <View style={[styles.mediumBr, styles.justifyContent]} key={user.mail}>
                 <View style={[styles.row, styles.justifyContent]}>
                   <View style={{ width: '70%' }}>
-                    <Text style={[styles.white, styles.textAlign]}>{user.mail}</Text>
+                    <Text style={[styles.white, styles.textAlignCenter]}>{user.mail}</Text>
                   </View>
                   <View style={[styles.verticalDivider, { marginHorizontal: '5%' }]} />
                   <View>
@@ -351,7 +350,7 @@ export default function AdminScreen({ navigation }) {
             <View style={[styles.mediumBr, styles.justifyContent]} key={user.mail}>
               <View style={[styles.row, styles.justifyContent]}>
                 <View style={{ width: '70%' }}>
-                  <Text style={[styles.white, styles.textAlign]}>{user.mail}</Text>
+                  <Text style={[styles.white, styles.textAlignCenter]}>{user.mail}</Text>
                 </View>
                 <View style={[styles.verticalDivider, { marginHorizontal: '5%' }]} />
                 <View>

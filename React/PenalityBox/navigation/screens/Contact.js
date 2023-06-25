@@ -52,26 +52,26 @@ export default function ContactScreen() {
       //Gestion téléphone
       <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
         <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]}
+          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
           placeholder="Nom"
           placeholderTextColor="white"
           onChangeText={(text) => setFormData({ ...formData, firstName: text })}
         />
         <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]}
+          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
           placeholder="Prénom"
           placeholderTextColor="white"
           onChangeText={(text) => setFormData({ ...formData, lastName: text })}
         />
         <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]}
+          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
           placeholder="Mail"
           keyboardType="email-address"
           placeholderTextColor="white"
           onChangeText={(text) => setFormData({ ...formData, email: text })}
         />
         <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlign, styles.phoneInformationBox, styles.white]}
+          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
           placeholder="Sujet"
           placeholderTextColor="white"
           onChangeText={(text) => setFormData({ ...formData, subject: text })}
@@ -97,7 +97,7 @@ export default function ContactScreen() {
         <View style={styles.iconContainer}>
           <Icon name="user" size={20} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Nom"
             placeholderTextColor="lightgrey"
             onChangeText={(text) => setFormData({ ...formData, firstName: text })}
@@ -106,7 +106,7 @@ export default function ContactScreen() {
         <View style={styles.iconContainer}>
           <Icon name="user" size={20} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Prénom"
             placeholderTextColor="lightgrey"
             onChangeText={(text) => setFormData({ ...formData, lastName: text })}
@@ -115,7 +115,7 @@ export default function ContactScreen() {
         <View style={styles.iconContainer}>
           <Icon name="envelope" size={15} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Mail"
             keyboardType="email-address"
             placeholderTextColor="lightgrey"
@@ -125,7 +125,7 @@ export default function ContactScreen() {
         <View style={styles.iconContainer}>
           <Icon name={'lightbulb-o'} size={15} color="lightgrey" />
           <TextInput
-            style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Sujet"
             placeholderTextColor="lightgrey"
             onChangeText={(text) => setFormData({ ...formData, sujet: text })}

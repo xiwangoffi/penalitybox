@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const handleImageUpload = async (imageUri, changelog, developers, setImageUri, setChangelog, setDevelopers) => {
+  export const handleImageUpload = async (imageUri, changelog, developers, setImageUri, setChangelog, setDevelopers) => {
     try {
       const formData = new FormData();
   
@@ -22,6 +22,30 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
       }
     } catch (error) {
       console.error('Error uploading file:', error);
+    }
+  };
+
+  export const handleUpdateImageUpload = async (imageUri, selectedVersion) => {
+    try {
+      const formData = new FormData();
+
+      const selectedImage = await fetch(imageUri);
+      const imageBlob = await selectedImage.blob();
+
+      formData.append('file', imageBlob, 'image.jpg');
+
+      const response = await axios.post('http://localhost:4444/upload', formData);
+      const result = await response.json();
+      if(response.ok) {
+        console.log('Update file uploaded successfully');
+        updateVersion(selectedVersion, {
+          image: response.data.filename,
+        });
+      } else {
+        console.log('Error uploading image:', result.error);
+      }
+    } catch (error) {
+      console.log('Error uploading image', error);
     }
   };
   
@@ -82,6 +106,7 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
     }
   };
   
+  /*
   export const deleteImage = image => {
     axios
       .delete('http://localhost:4444/delete/image', { data: { image: image } })
@@ -154,3 +179,4 @@ export const handleImageUpload = async (imageUri, changelog, developers, setImag
       performUpdate(versionNumber, updateData);
     }
   };
+  */
