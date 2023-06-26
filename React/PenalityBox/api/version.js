@@ -25,29 +25,71 @@ import axios from 'axios';
     }
   };
 
-  export const handleUpdateImageUpload = async (imageUri, selectedVersion) => {
+  /* GOOD ONE <-----------
+  export const handleUpdateImageUpload = async (selectedVersion, data) => {
     try {
       const formData = new FormData();
-
-      const selectedImage = await fetch(imageUri);
+      const updateData = new FormData();
+  
+      const selectedImage = await fetch(data.newImage);
       const imageBlob = await selectedImage.blob();
-
+  
       formData.append('file', imageBlob, 'image.jpg');
-
+  
+      console.log('Before uploading, imageUri:', data.newImage);
       const response = await axios.post('http://localhost:4444/upload', formData);
-      const result = await response.json();
-      if(response.ok) {
-        console.log('Update file uploaded successfully');
-        updateVersion(selectedVersion, {
-          image: response.data.filename,
-        });
+      console.log('filename:', response.data.filename);
+  
+      if (response.status === 200) {
+        console.log('File uploaded successfully');
+        updateData.append('newChangelog', data.newChangelog);
+        updateData.append('newDev', data.newDev);
+        updateData.append('newImage', response.data.filename);
+        updateData.append('changelog', data.changelog);
+        updateData.append('dev', data.dev);
+        updateData.append('image', data.image);
+        await editVersion(selectedVersion, updateData);
       } else {
-        console.log('Error uploading image:', result.error);
+        console.log('Error uploading file');
       }
     } catch (error) {
-      console.log('Error uploading image', error);
+      console.error('Error uploading file:', error);
     }
   };
+  */
+
+  export const handleUpdateImageUpload = async (selectedVersion, data) => {
+    try {
+      const formData = new FormData();
+      const updateData = new FormData();
+  
+      const selectedImage = await fetch(data.newImage);
+      const imageBlob = await selectedImage.blob();
+  
+      formData.append('file', imageBlob, 'image.jpg');
+  
+      console.log('Before uploading, image:', data.newImage);
+      const response = await axios.post('http://localhost:4444/upload', formData);
+      console.log('filename:', response.data.filename);
+  
+      if (response.status === 200) {
+        console.log('File uploaded successfully');
+        updateData.append('newChangelog', data.newChangelog);
+        updateData.append('newDev', data.newDev);
+        updateData.append('newImage', response.data.filename);
+        updateData.append('changelog', data.changelog);
+        updateData.append('dev', data.dev);
+        updateData.append('image', data.image);
+        await editVersion(selectedVersion, updateData);
+      } else {
+        console.log('Error uploading file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
+  
+  
   
   export const insertVersionData = async (changelog, dev, image) => {
     try {
@@ -105,78 +147,14 @@ import axios from 'axios';
       return {};
     }
   };
-  
-  /*
-  export const deleteImage = image => {
-    axios
-      .delete('http://localhost:4444/delete/image', { data: { image: image } })
-      .then(response => {
-        console.log(response.data); // Image deleted successfully!
-        // Additional logic or state updates after successful deletion
-      })
-      .catch(error => {
-        console.error(error);
-        // Handle error
-      });
-  };
 
-  // Function to perform the update request
-  export const performUpdate = (versionNumber, updateData) => {
-    console.log('Just before performing update, check versionNumber and updateData');
-    console.log('versionNumber: ', versionNumber);
-    console.log('updateData: ', updateData);
-    axios
-      .put(`http://localhost:4444/versions/update/${versionNumber}`, updateData)
-      .then(response => {
-        console.log(response.data); // Version data updated successfully!
-        // Additional logic or state updates after successful update
-      })
-      .catch(error => {
-        console.error(error);
-        // Handle error during version update
-      });
+  export const editVersion = async (version, data) => {
+    await fetch(`http://localhost:4444/versions/update/${version}`, {
+      method: 'POST',
+      body: JSON.stringify(data), // Convert the FormData to JSON
+      headers: {
+        'Content-Type': 'application/json', // Set the content type to JSON
+      },
+    });
   };
   
-  export const updateVersion = (versionNumber, changelog, dev, image) => {
-    const updateData = {
-      changelog: changelog,
-      ...(dev && { dev }),
-      ...(image && { image }),
-    };
-  
-    console.log('Check dev value: ', dev);
-    console.log('Check changelog value: ', changelog);
-    console.log('Check image value: ', image);
-    // Check if a new image is submitted
-    if (image) {
-      // Retrieve the previous image for deletion
-      axios
-        .get(`http://localhost:4444/versions/${versionNumber}`)
-        .then(response => {
-          const previousImage = response.data.image;
-  
-          // Delete the previous image
-          deleteImage(previousImage)
-            .then(() => {
-              // Update the version data
-              console.log('Delete image supposed to happens here');
-              performUpdate(versionNumber, updateData);
-            })
-            .catch(error => {
-              console.log('Error deleting image');
-              console.error(error);
-              // Handle error during image deletion
-            });
-        })
-        .catch(error => {
-          console.log('Error server response');
-          console.error(error);
-          // Handle error retrieving previous image
-        });
-    } else {
-      console.log('Classic update insert');
-      // No new image, perform the update directly
-      performUpdate(versionNumber, updateData);
-    }
-  };
-  */

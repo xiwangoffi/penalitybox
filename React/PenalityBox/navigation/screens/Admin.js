@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, Image, Button, Picker } from '
 import styles from '../../styles/styles';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { fetchRecentUsers, fetchUsers, updateAdmin } from '../../api/account';
-import { handleImageUpload, fetchVersions, fetchVersionData, updateVersion } from '../../api/version';
+import { handleImageUpload, fetchVersions, fetchVersionData, handleUpdateImageUpload, editVersion } from '../../api/version';
 
 export default function AdminScreen({ navigation }) {
 
@@ -19,6 +19,9 @@ export default function AdminScreen({ navigation }) {
   const [imageUri, setImageUri] = useState(null);
   const [changelog, setChangelog] = useState('');
   const [developers, setDevelopers] = useState('');
+
+  const [newChangelog, setNewChangelog] = useState('');
+  const [newDevelopers, setNewDevelopers] = useState('');
 
   const [isUpdate, setIsUpdate] = useState(false);
 
@@ -158,28 +161,37 @@ export default function AdminScreen({ navigation }) {
     }
   };
 
-  const handleUpdateVersionData = async () => {
+  const clientHandleUpdateVersionData = async () => {
     if (!selectedVersion || !selectedVersionData) {
       return;
     }
   
     try {
       const data = {
+        newChangelog: selectedVersionData.newChangelog || selectedVersionData.changelog,
+        newDev: selectedVersionData.newDev || selectedVersionData.dev,
+        newImage: imageUri,
         changelog: selectedVersionData.changelog,
         dev: selectedVersionData.dev,
-        image: imageUri, // Add the image URI to the data object
+        image: selectedVersionData.image,
       };
   
       console.log('Data (before calling updateVersion): ', data);
-      await updateVersion(selectedVersion, data);
-      // Handle success or perform any additional actions
-      console.log('Version data updated successfully');
   
+      if (imageUri === null) {
+        await editVersion(selectedVersion, data);
+      } else {
+        await handleUpdateImageUpload(selectedVersion, data);
+      }
+  
+      console.log('Version data updated successfully');
     } catch (error) {
       console.error('Error updating version data:', error);
       // Handle error or show error message
     }
   };
+  
+  
 
   return (
     <View style={[styles.background, styles.flexOne, styles.row, styles.alignItems, styles.justifyContent]}>
@@ -228,15 +240,20 @@ export default function AdminScreen({ navigation }) {
         <View style={[styles.versionEditorContainer, styles.alignItems, {flexDirection: 'column', justifyContent: 'center'}]}>
           <View style={[styles.editorSubView ,styles.row]}>
             <View style={[styles.versionChangelogEditor, styles.alignItems]}>
-              {isUpdate === 'Update' ?
+            {isUpdate === 'Update' ? (
               <View style={{ width: '100%', height: '100%' }}>
                 <TextInput
                   style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
                   placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
                   placeholderTextColor="black"
                   multiline={true}
-                  value={selectedVersionData ? selectedVersionData.changelog : ''}
-                  onChangeText={(text) => setSelectedVersionData({ ...selectedVersionData, changelog: text })}
+                  value={selectedVersionData ? selectedVersionData.newChangelog || selectedVersionData.changelog : ''}
+                  onChangeText={(text) =>
+                    setSelectedVersionData((prevState) => ({
+                      ...prevState,
+                      newChangelog: text,
+                    }))
+                  }
                 />
                 <View style={styles.littleBr} />
                 <TextInput
@@ -244,31 +261,36 @@ export default function AdminScreen({ navigation }) {
                   placeholder="Développeur site internet : BOISSEAU Romain"
                   placeholderTextColor="black"
                   multiline={true}
-                  value={selectedVersionData ? selectedVersionData.dev : ''}
-                  onChangeText={(text) => setSelectedVersionData({ ...selectedVersionData, dev: text })}
+                  value={selectedVersionData ? selectedVersionData.newDev || selectedVersionData.dev : ''}
+                  onChangeText={(text) =>
+                    setSelectedVersionData((prevState) => ({
+                      ...prevState,
+                      newDev: text,
+                    }))
+                  }
                 />
               </View>
-              :
-                <View style={{width: '100%', height: '100%'}}>
-                  <TextInput
-                    style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
-                    placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
-                    placeholderTextColor="black"
-                    multiline={true}
-                    value={changelog}
-                    onChangeText={(text) => setChangelog(text)}
-                  />
-                  <View style={styles.littleBr} />
-                  <TextInput
-                    style={[styles.versionDevBox, styles.boxShadow, styles.white]}
-                    placeholder="Développeur site internet : BOISSEAU Romain"
-                    placeholderTextColor="black"
-                    multiline={true}
-                    value={developers}
-                    onChangeText={(text) => setDevelopers(text)}
-                  />
-                </View>
-              }
+            ) : (
+              <View style={{ width: '100%', height: '100%' }}>
+                <TextInput
+                  style={[styles.versionChangelogBox, styles.boxShadow, styles.white]}
+                  placeholder="La nouvelle version de la penalitybox améliore l'interface utilisateur"
+                  placeholderTextColor="black"
+                  multiline={true}
+                  value={changelog}
+                  onChangeText={(text) => setChangelog(text)}
+                />
+                <View style={styles.littleBr} />
+                <TextInput
+                  style={[styles.versionDevBox, styles.boxShadow, styles.white]}
+                  placeholder="Développeur site internet : BOISSEAU Romain"
+                  placeholderTextColor="black"
+                  multiline={true}
+                  value={developers}
+                  onChangeText={(text) => setDevelopers(text)}
+                />
+              </View>
+            )}
             </View>
             <View style={[styles.versionImageImport, styles.verticalAlign, styles.alignItems, styles.justifyContent]}>
               <TouchableOpacity style={[styles.alignItems, styles.justifyContent, styles.selectPos]} onPress={handleImagePicker}>
@@ -306,7 +328,7 @@ export default function AdminScreen({ navigation }) {
               : null}
           </Text>
           <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
-            <Button title="Valider" color="grey" onPress={isUpdate === 'Update' ? handleUpdateVersionData : handleImageUploadWrapper} />
+            <Button title="Valider" color="grey" onPress={isUpdate === 'Update' ? clientHandleUpdateVersionData : handleImageUploadWrapper} />
           </View>
         </View>
         <View style={styles.littleBr} />

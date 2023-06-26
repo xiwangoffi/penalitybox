@@ -332,14 +332,14 @@ app.put('/versions/update/:version', jsonParser, (req, res) => {
 });
 */
 
+/*
 app.post('/versions/update/:version', (req, res) => {
+  const versionNumber = req.params.version;
   const body = req.body;
   console.log('Got body :', body);
 
-  let newFileName = body.Oimage;
-
-  if(body.image !== 'null') {
-    const filePath = `./React/PenalityBox/assets/versions/${body.Oimage}`;
+  if(body.newImage !== null) {
+    const filePath = `./React/PenalityBox/assets/versions/${body.image}`;
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error('Error deleting file:', err);
@@ -347,22 +347,146 @@ app.post('/versions/update/:version', (req, res) => {
         console.log('File deleted successfully');
       }
     });
-
-    newFileName = `${Date.now() + path.extname(file.originalname)}`;
+    //newFileName = `${Date.now() + path.extname(file.originalname)}`;
   }
 
-  body.changelog = body.changelog === '' ? body.Ochangelog : body.changelog;
-  body.dev = body.dev === '' ? body.Odev : body.dev;
+  body.newChangelog = body.newChangelog === '' ? body.changelog : body.newChangelog;
+  body.newDev = body.newDev === '' ? body.dev : body.newDev;
+  body.newImage = body.newImage === null ? body.image : body.newImage;
 
   console.log('Last Body : ', body);
 
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("versions")
-    .updateOne({ changelog: body.Ochangelog, dev: body.Odev, image: body.Oimage },
-    { $set: { changelog: body.changelog, dev: body.dev, image: body.newFileName} })
+    .findOne({ version: versionNumber.toString() })
+    .updateOne({ version: versionNumber, changelog: body.changelog, dev: body.dev, image: body.image },
+    { $set: { changelog: body.newChangelog, dev: body.newDev, image: body.newFileName} })
   res.json(body);
 });
+*/
+
+/* GOOD ONE <-------------
+app.post('/versions/update/:version', (req, res) => {
+  const versionNumber = req.params.version;
+  const body = req.body;
+  console.log('Got body:', body);
+
+  if (body.newImage !== null && body.newImage !== body.image) {
+    const filePath = `./React/PenalityBox/assets/versions/${body.image}`;
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+      } else {
+        console.log('File deleted successfully');
+      }
+    });
+  }
+
+  body.newChangelog = body.newChangelog === '' ? body.changelog : body.newChangelog;
+  body.newDev = body.newDev === '' ? body.dev : body.newDev;
+  body.newImage = body.newImage === null ? body.image : body.newImage;
+
+  console.log('Last Body:', body);
+
+  const dbConnect = dbo.getDb();
+  dbConnect.collection("versions").findOne({ version: versionNumber.toString() }, (err, version) => {
+    if (err) {
+      console.error('Error finding version:', err);
+      res.sendStatus(500);
+      return;
+    }
+
+    if (!version) {
+      console.error('Version not found');
+      res.sendStatus(404);
+      return;
+    }
+
+    dbConnect.collection("versions").update(
+      { version: versionNumber },
+      {
+        $set: {
+          changelog: body.newChangelog,
+          dev: body.newDev,
+          image: body.newImage,
+        },
+      },
+      (err) => {
+        if (err) {
+          console.error('Error updating version:', err);
+          res.sendStatus(500);
+          return;
+        }
+
+        res.json(body);
+      }
+    );
+  });
+});
+*/
+
+
+app.post('/versions/update/:version', (req, res) => {
+  const versionNumber = req.params.version;
+  const body = req.body;
+  console.log('Got body:', body);
+
+  if (body.newImage !== null && body.newImage !== body.image) {
+    const filePath = `./React/PenalityBox/assets/versions/${body.image}`;
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+      } else {
+        console.log('File deleted successfully');
+      }
+    });
+  }
+
+  body.newChangelog = body.newChangelog === '' ? body.changelog : body.newChangelog;
+  body.newDev = body.newDev === '' ? body.dev : body.newDev;
+  body.newImage = body.newImage === null ? body.image : body.newImage;
+
+  console.log('Last Body:', body);
+
+  const dbConnect = dbo.getDb();
+  dbConnect.collection("versions").findOne({ version: versionNumber.toString() }, (err, version) => {
+    if (err) {
+      console.error('Error finding version:', err);
+      res.sendStatus(500);
+      return;
+    }
+
+    if (!version) {
+      console.error('Version not found');
+      res.sendStatus(404);
+      return;
+    }
+
+    dbConnect.collection("versions").updateOne(
+      { version: versionNumber },
+      {
+        $set: {
+          changelog: body.newChangelog,
+          dev: body.newDev,
+          image: body.newImage,
+        },
+      },
+      (err) => {
+        if (err) {
+          console.error('Error updating version:', err);
+          res.sendStatus(500);
+          return;
+        }
+
+        res.json(body);
+      }
+    );
+  });
+});
+
+
+
 
 
 app.post("/versions/insert", jsonParser, (req, res) => {
@@ -429,8 +553,6 @@ app.get("/versions/increase", (req, res) => {
     });
 });
 
-
-
 app.get('/versions/changelog/:version', function (req, res) {
   const { version } = req.params;
   const dbConnect = dbo.getDb();
@@ -482,7 +604,6 @@ app.get('/version/image/:version', function (req, res) {
   });
 });
 
-
 app.get('/versions/image/:version', function (req, res) {
   const { version } = req.params;
   const dbConnect = dbo.getDb();
@@ -499,7 +620,6 @@ app.get('/versions/image/:version', function (req, res) {
     }
   });
 });
-
 
 app.post('/version/delete', async (req, res) => {
   const version = req.body.version;
@@ -518,9 +638,6 @@ app.post('/version/delete', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
-
 
 app.post('/account/forgot-password', jsonParser, async (req, res) => {
   const { mail } = req.body;
