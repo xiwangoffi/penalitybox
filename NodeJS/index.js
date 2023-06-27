@@ -432,8 +432,9 @@ app.post('/versions/update/:version', (req, res) => {
   const body = req.body;
   console.log('Got body:', body);
 
+
   if (body.newImage !== null && body.newImage !== body.image) {
-    const filePath = `./React/PenalityBox/assets/versions/${body.image}`;
+    const filePath = `../React/PenalityBox/assets/versions/${body.image}`;
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error('Error deleting file:', err);

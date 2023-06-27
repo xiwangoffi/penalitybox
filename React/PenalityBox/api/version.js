@@ -61,7 +61,6 @@ import axios from 'axios';
   export const handleUpdateImageUpload = async (selectedVersion, data) => {
     try {
       const formData = new FormData();
-      const updateData = new FormData();
   
       const selectedImage = await fetch(data.newImage);
       const imageBlob = await selectedImage.blob();
@@ -74,12 +73,17 @@ import axios from 'axios';
   
       if (response.status === 200) {
         console.log('File uploaded successfully');
-        updateData.append('newChangelog', data.newChangelog);
-        updateData.append('newDev', data.newDev);
-        updateData.append('newImage', response.data.filename);
-        updateData.append('changelog', data.changelog);
-        updateData.append('dev', data.dev);
-        updateData.append('image', data.image);
+
+        const updateData = {
+          newChangelog: data.newChangelog,
+          newDev: data.newDev,
+          newImage: response.data.filename,
+          changelog: data.changelog,
+          dev: data.dev,
+          image: data.image,
+        }
+
+        console.log('updateData before editing: ', updateData);
         await editVersion(selectedVersion, updateData);
       } else {
         console.log('Error uploading file');
