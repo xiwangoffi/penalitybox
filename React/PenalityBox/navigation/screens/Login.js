@@ -210,14 +210,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
     return () => subscription?.remove();
   });
 
-  if (dimensions.window.height >= dimensions.screen.width) {
-    return (
-      //Handle phone log-in screen
-      <View>
-        <Text>Login Screen for Phone</Text>
-      </View>
-    );
-  } else if (showLegalInfos){
+  if (showLegalInfos){
     return <LegalInfo setShowLegalInfos={setShowLegalInfos} />
   } else {
     return (

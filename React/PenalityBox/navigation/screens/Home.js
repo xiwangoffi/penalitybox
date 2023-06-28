@@ -3,6 +3,7 @@ import { View, Text, Image, Dimensions, Alert } from 'react-native';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 import LegalInfo from '../../components/Legal';
+import PhoneHome from '../../components/phoneHome';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
@@ -25,10 +26,8 @@ export default function HomeScreen() {
 
   if (dimensions.window.height >= dimensions.screen.width) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text onPress={() => Alert.alert('Home Screen')} style={{ fontSize: 26, fontWeight: 'bold' }}>
-          Home Screen
-        </Text>
+      <View style={[styles.flexOne, styles.justifyContent, styles.alignItems]}>
+        <PhoneHome />
       </View>
     );
   } else if (showLegalInfos) {

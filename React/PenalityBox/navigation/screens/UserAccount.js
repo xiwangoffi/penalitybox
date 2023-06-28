@@ -89,7 +89,7 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
       <View style={styles.iconContainer}>
         <Icon name="at" size={20} color="lightgrey" />
         <TextInput
-          style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]}
+          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
           keyboardType="email-address"
           placeholderTextColor="lightgrey"
           value={userEmail}
@@ -98,7 +98,7 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
       <View style={[styles.iconContainer, styles.br]}>
         <Icon name="lock" size={20} color="lightgrey" />
         <TextInput
-          style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]}
+          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
           placeholder="Mot de passe actuel"
           placeholderTextColor="lightgrey"
           secureTextEntry={true}
@@ -109,7 +109,7 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
       <View style={styles.iconContainer}>
         <Icon name="lock" size={20} color="lightgrey" />
         <TextInput
-          style={[styles.informationContainer, styles.textAlign, styles.informationBox, styles.boxShadow, styles.white]}
+          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
           placeholder="Nouveau mot de passe"
           placeholderTextColor="lightgrey"
           secureTextEntry={true}

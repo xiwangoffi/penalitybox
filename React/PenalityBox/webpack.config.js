@@ -4,6 +4,7 @@ module.exports = function (env, argv) {
   env.mode = "development";
   const config = createExpoWebpackConfig(env, argv);
 
+  /*
   // Ajout de la règle pour les fichiers d'images
   config.module.rules.push({
     test: /\.(png|jpe?g|gif|svg)$/i,
@@ -23,6 +24,7 @@ module.exports = function (env, argv) {
     test: /\.(woff|woff2|eot|ttf|otf)$/i,
     use: ["file-loader"],
   }); 
+  */
 
   return config;
 };
