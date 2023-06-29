@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Dimensions } from 'react-native'
 import axios from 'axios';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -26,7 +27,16 @@ const userAccount = 'Mon compte';
 
 const Drawer = createDrawerNavigator();
 
+const windowDimensions = Dimensions.get('window');
+const screenDimensions = Dimensions.get('screen');
+
 export default function MainContainer() {
+
+  const [dimensions, setDimensions] = useState({
+    window: windowDimensions,
+    screen: screenDimensions,
+  });
+
   const [isConnected, setIsConnected] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState('');
@@ -36,6 +46,10 @@ export default function MainContainer() {
   };
 
   useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
+      setDimensions({ window, screen });
+    });
+
     checkAdminStatus();
   }, []);
 
@@ -48,40 +62,76 @@ export default function MainContainer() {
     }
   };
   
-
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name={homeName} component={HomeScreen} />
-        <Drawer.Screen name={contactName} component={ContactScreen} />
-        <Drawer.Screen name={versionsName} component={VersionsScreen} />
-        <Drawer.Screen name={creditsScreen} component={CreditsScreen} />
-        {isConnected && (
-          <>
-            <Drawer.Screen name={appliName} component={AppliScreen} />
-            {isAdmin && <Drawer.Screen name={adminName} component={AdminScreen} />}
-          </>
-        )}
-        {isConnected ? (
-          <Drawer.Screen name={userAccount}>
-            {(props) => (
-              <UserAccount {...props} setIsConnected={setIsConnected} userEmail={email} />
-            )}
-          </Drawer.Screen>
-
-        ) : (
-          <Drawer.Screen name={loginModal}>
-            {(props) => (
-              <LoginModal
-                {...props}
-                setIsConnected={setIsConnected}
-                checkAdminStatus={checkAdminStatus}
-                handleEmailChange={handleEmailChange}
-              />
-            )}
-          </Drawer.Screen>
-        )}
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+  if(dimensions.window.height >= dimensions.screen.width) {
+    return (
+      <NavigationContainer>
+        <Drawer.Navigator>
+          <Drawer.Screen name={homeName} component={HomeScreen} />
+          <Drawer.Screen name={contactName} component={ContactScreen} />
+          <Drawer.Screen name={versionsName} component={VersionsScreen} />
+          <Drawer.Screen name={creditsScreen} component={CreditsScreen} />
+          {isConnected && (
+            <>
+              <Drawer.Screen name={appliName} component={AppliScreen} />
+            </>
+          )}
+          {isConnected ? (
+            <Drawer.Screen name={userAccount}>
+              {(props) => (
+                <UserAccount {...props} setIsConnected={setIsConnected} userEmail={email} />
+              )}
+            </Drawer.Screen>
+  
+          ) : (
+            <Drawer.Screen name={loginModal}>
+              {(props) => (
+                <LoginModal
+                  {...props}
+                  setIsConnected={setIsConnected}
+                  checkAdminStatus={checkAdminStatus}
+                  handleEmailChange={handleEmailChange}
+                />
+              )}
+            </Drawer.Screen>
+          )}
+        </Drawer.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Drawer.Navigator>
+          <Drawer.Screen name={homeName} component={HomeScreen} />
+          <Drawer.Screen name={contactName} component={ContactScreen} />
+          <Drawer.Screen name={versionsName} component={VersionsScreen} />
+          <Drawer.Screen name={creditsScreen} component={CreditsScreen} />
+          {isConnected && (
+            <>
+              <Drawer.Screen name={appliName} component={AppliScreen} />
+              {isAdmin && <Drawer.Screen name={adminName} component={AdminScreen} />}
+            </>
+          )}
+          {isConnected ? (
+            <Drawer.Screen name={userAccount}>
+              {(props) => (
+                <UserAccount {...props} setIsConnected={setIsConnected} userEmail={email} />
+              )}
+            </Drawer.Screen>
+  
+          ) : (
+            <Drawer.Screen name={loginModal}>
+              {(props) => (
+                <LoginModal
+                  {...props}
+                  setIsConnected={setIsConnected}
+                  checkAdminStatus={checkAdminStatus}
+                  handleEmailChange={handleEmailChange}
+                />
+              )}
+            </Drawer.Screen>
+          )}
+        </Drawer.Navigator>
+      </NavigationContainer>
+    );
+  }
 }

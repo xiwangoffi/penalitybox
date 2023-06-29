@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, SafeAreaView, ScrollView } from 'react-native';
 import styles from '../styles/styles';
 
 export default function PhoneCreditsList() {
     return(
-        <View>
-            <View style={[styles.phoneRoleContainer, styles.justifyContent]}>
+        <SafeAreaView style={styles.phoneRoleContainer}>
+            <ScrollView>
                 <View style={[styles.phoneCreditsImage, styles.justifyContent, styles.alignItems]}>
                     <Image source={require('../assets/img/user-tie.png')} style={styles.phoneJobIconsSize} resizeMode='contain' />
                 </View>
@@ -77,7 +77,7 @@ export default function PhoneCreditsList() {
                         </View>
                     </View>
                 </View>
-            </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }

@@ -314,7 +314,7 @@ export default function Login({ setIsConnected, checkAdminStatus, handleEmailCha
         <View style={[styles.validateButton, styles.boxShadow]}>
           <Button
             title="Valider"
-            color="grey"
+            color="#1FD43D"
             onPress={() => {
               if (showSignIn) {
                 insertAccount();

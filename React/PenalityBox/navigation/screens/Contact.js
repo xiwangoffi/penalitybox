@@ -84,7 +84,7 @@ export default function ContactScreen() {
           onChangeText={(text) => setFormData({ ...formData, message: text })}
         />
         <View style={styles.phoneValidateButton}>
-          <Button title="Valider" color="grey" onPress={handleSubmit} />
+          <Button title="Valider" color="#1FD43D" onPress={handleSubmit} />
         </View>
       </View>
     );
@@ -139,7 +139,7 @@ export default function ContactScreen() {
           onChangeText={(text) => setFormData({ ...formData, message: text })}
         />
         <View style={[styles.validateButton, styles.boxShadow]}>
-          <Button title="Valider" color="grey" onPress={handleSubmit} />
+          <Button title="Valider" color="#1FD43D" onPress={handleSubmit} />
         </View>
         <Footer setShowLegalInfos={setShowLegalInfos} />
       </View>

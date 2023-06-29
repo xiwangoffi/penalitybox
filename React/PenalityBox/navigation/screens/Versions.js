@@ -5,6 +5,7 @@ import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 import { fetchVersions, fetchVersionData } from '../../api/version'; // Import the updated functions
 import LegalInfo from '../../components/Legal';
+import PhoneVersions from '../../components/phoneVersions';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
@@ -67,9 +68,7 @@ export default function VersionScreen() {
 
   if (dimensions.window.height >= dimensions.screen.width) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Version Screen</Text>
-      </View>
+      <PhoneVersions />
     );
   } else if (showLegalInfos){
     return <LegalInfo setShowLegalInfos={setShowLegalInfos} />

@@ -153,6 +153,11 @@ const styles = {
         height: '70%',
     },
 
+    phoneHomeContainer: {
+        height: '100%',
+        width: '100%',
+    },
+
     contentContainer: {
         width: '68%',
         height: '100%',
@@ -165,6 +170,11 @@ const styles = {
         height: '100%',
         borderLeftWidth: 2,
         borderLeftColor: 'black',
+    },
+
+    phoneHomeImageContainer: {
+        width: '100%',
+        height: '110%',
     },
 
     gifContainer: {
@@ -618,6 +628,14 @@ footer: {
     verticalDivider: {
         borderRightWidth: 1,
         borderRightColor: 'black',
+    },
+
+    phoneDivider: {
+      height: '1%',
+      borderBottomColor: 'black',
+      borderBottomWidth: 2,
+      marginRight: '10%',
+      marginLeft: '10%',
     },
 
     /*

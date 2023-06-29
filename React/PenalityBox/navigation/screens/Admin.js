@@ -328,7 +328,7 @@ export default function AdminScreen({ navigation }) {
               : null}
           </Text>
           <View style={[styles.validateButton, styles.boxShadow, styles.justifyContent]}>
-            <Button title="Valider" color="grey" onPress={isUpdate === 'Update' ? clientHandleUpdateVersionData : handleImageUploadWrapper} />
+            <Button title="Valider" color="#1FD43D" onPress={isUpdate === 'Update' ? clientHandleUpdateVersionData : handleImageUploadWrapper} />
           </View>
         </View>
         <View style={styles.littleBr} />

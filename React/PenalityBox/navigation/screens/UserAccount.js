@@ -135,7 +135,7 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
         </Text>
       </View>
       <View style={[styles.validateButton, styles.boxShadow]}>
-        <Button title="Valider" color="grey" onPress={updatePassword} />
+        <Button title="Valider" color="#1FD43D" onPress={updatePassword} />
       </View>
       <View style={styles.loginOptionContainer}>
           <View>
