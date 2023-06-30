@@ -48,46 +48,51 @@ export default function ContactScreen() {
   };
 
   if (dimensions.window.height >= dimensions.screen.width) {
-    return (
-      //Gestion téléphone
-      <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
-        <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
-          placeholder="Nom"
-          placeholderTextColor="white"
-          onChangeText={(text) => setFormData({ ...formData, firstName: text })}
-        />
-        <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
-          placeholder="Prénom"
-          placeholderTextColor="white"
-          onChangeText={(text) => setFormData({ ...formData, lastName: text })}
-        />
-        <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
-          placeholder="Mail"
-          keyboardType="email-address"
-          placeholderTextColor="white"
-          onChangeText={(text) => setFormData({ ...formData, email: text })}
-        />
-        <TextInput
-          style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
-          placeholder="Sujet"
-          placeholderTextColor="white"
-          onChangeText={(text) => setFormData({ ...formData, subject: text })}
-        />
-        <TextInput
-          style={[styles.phoneInformationContainer, styles.phoneMessageBox, styles.white]}
-          placeholder="Message"
-          multiline={true}
-          placeholderTextColor="white"
-          onChangeText={(text) => setFormData({ ...formData, message: text })}
-        />
-        <View style={styles.phoneValidateButton}>
-          <Button title="Valider" color="#1FD43D" onPress={handleSubmit} />
+    if(showLegalInfos) {
+      return <LegalInfo setShowLegalInfos={setShowLegalInfos} />
+    } else {
+      return (
+        //Gestion téléphone
+        <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
+          <TextInput
+            style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
+            placeholder="Nom"
+            placeholderTextColor="white"
+            onChangeText={(text) => setFormData({ ...formData, firstName: text })}
+          />
+          <TextInput
+            style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
+            placeholder="Prénom"
+            placeholderTextColor="white"
+            onChangeText={(text) => setFormData({ ...formData, lastName: text })}
+          />
+          <TextInput
+            style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
+            placeholder="Mail"
+            keyboardType="email-address"
+            placeholderTextColor="white"
+            onChangeText={(text) => setFormData({ ...formData, email: text })}
+          />
+          <TextInput
+            style={[styles.phoneInformationContainer, styles.textAlignCenter, styles.phoneInformationBox, styles.white]}
+            placeholder="Sujet"
+            placeholderTextColor="white"
+            onChangeText={(text) => setFormData({ ...formData, subject: text })}
+          />
+          <TextInput
+            style={[styles.phoneInformationContainer, styles.phoneMessageBox, styles.white]}
+            placeholder="Message"
+            multiline={true}
+            placeholderTextColor="white"
+            onChangeText={(text) => setFormData({ ...formData, message: text })}
+          />
+          <View style={styles.phoneValidateButton}>
+            <Button title="Valider" color="#1FD43D" onPress={handleSubmit} />
+          </View>
+          <Footer setShowLegalInfos={setShowLegalInfos}/>
         </View>
-      </View>
-    );
+      );
+    }
   } else if (showLegalInfos) {
     return <LegalInfo setShowLegalInfos={setShowLegalInfos} />;
   } else {

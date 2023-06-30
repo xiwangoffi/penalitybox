@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, Dimensions } from 'react-native';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 import LegalInfo from '../../components/Legal';

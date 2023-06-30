@@ -334,9 +334,7 @@ const styles = {
 
 */
 
-footer: {
-    width: '40%',
-    height: 70,
+  footerStyle: {
     backgroundColor: '#837A7A',
     borderTopWidth: 5,
     borderColor: 'black',
@@ -344,11 +342,26 @@ footer: {
     position: 'absolute',
     bottom: 0,
   },
+
+  footer: {
+    width: '40%',
+    height: 70,
+  },
+
+  phoneFooter: {
+    width: '100%',
+    height: 70,
+  },
   
   logo: {
     width: 190,
     height: 53,
     marginHorizontal: 20,
+  },
+
+  phoneLogo: {
+    width: 150,
+    height: 23,
   },
 
 /*
@@ -497,6 +510,11 @@ footer: {
         flexDirection: 'row',
         borderRadius: 7,
         borderColor: '#736C6C',
+    },
+
+    phoneVersionContainer: {
+        width: '100%',
+        height: '100%',
     },
 
     versionTextContainer: {
@@ -794,11 +812,15 @@ footer: {
     },
 
     appTextTitle: {
-        fontSize: 42,
+        fontSize: 26,
     },
 
     appSubText: {
-        fontSize: 36,
+        fontSize: 16,
+    },
+
+    pcSubText: {
+        fontSize: 18,
     },
 
     sequenceText: {
@@ -820,10 +842,17 @@ footer: {
 
     */
 
+    panelImageStyle: {
+        height: undefined, // Set the height to undefined to maintain aspect ratio 
+        aspectRatio: 2, // Adjust the aspect ratio as per your image dimensions
+    },
+
     panelImage: {
         width: '60%',
-        height: undefined, // Set the height to undefined to maintain aspect ratio
-        aspectRatio: 2, // Adjust the aspect ratio as per your image dimensions
+    },
+
+    phonePanelImage: {
+        width: '100%',
     },
 
      /*

@@ -3,6 +3,8 @@ import { View, TextInput, Button, Text } from 'react-native';
 import styles from '../../styles/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios'; //axios library for nodejs requests
+import Footer from '../../components/footer';
+import LegalInfo from '../../components/Legal';
 
 export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
   const [mail, setEmail] = useState('');
@@ -16,6 +18,8 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
   const [isUpdateEmpty, setIsUpdateEmpty] = useState(false); //handle no old password and new password text
   const [isUpdateOldPasswordEmpty, setIsUpdateOldPasswordEmpty] = useState(false); //handle no old password text
   const [isUpdateNewPasswordEmpty, setIsUpdateNewPasswordEmpty] = useState(false); //handle no new password text
+
+  const [showLegalInfos, setShowLegalInfos] = useState(false);
 
   //Hover methods
   const handleSignOutHoverEnter = () => {
@@ -84,78 +88,83 @@ export default function UserAccount({ navigation ,setIsConnected, userEmail }) {
     }
   };
 
-  return (
-    <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
-      <View style={styles.iconContainer}>
-        <Icon name="at" size={20} color="lightgrey" />
-        <TextInput
-          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
-          keyboardType="email-address"
-          placeholderTextColor="lightgrey"
-          value={userEmail}
-        />
-      </View>
-      <View style={[styles.iconContainer, styles.br]}>
-        <Icon name="lock" size={20} color="lightgrey" />
-        <TextInput
-          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
-          placeholder="Mot de passe actuel"
-          placeholderTextColor="lightgrey"
-          secureTextEntry={true}
-          value={oldPassword}
-          onChangeText={(text) => setOldPassword(text)}
-        />
-      </View>
-      <View style={styles.iconContainer}>
-        <Icon name="lock" size={20} color="lightgrey" />
-        <TextInput
-          style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
-          placeholder="Nouveau mot de passe"
-          placeholderTextColor="lightgrey"
-          secureTextEntry={true}
-          value={newPassword}
-          onChangeText={(text) => setNewPassword(text)}
-        />
-      </View>
-      <View>
-        <Text style={[
-          isValidate ? [styles.green, styles.bold, styles.textShadow] : null,
-          isUpdateEmpty ||
-          isUpdateNewPasswordEmpty ||
-          isUpdateOldPasswordEmpty ? [styles.red, styles.bold, styles.textShadow] : null,
-        ]}>{isValidate 
-            ? 'Mot de passe changé avec succès !'
-            : isUpdateEmpty
-            ? 'Veuillez renseigner votre ancien et nouveau mot de passe'
-            : isUpdateOldPasswordEmpty
-            ? 'Veuillez renseigner votre ancien mot de passe'
-            : isUpdateNewPasswordEmpty
-            ? 'Veuillez renseigner votre nouveau mot de passe'
-            : null}
-        </Text>
-      </View>
-      <View style={[styles.validateButton, styles.boxShadow]}>
-        <Button title="Valider" color="#1FD43D" onPress={updatePassword} />
-      </View>
-      <View style={styles.loginOptionContainer}>
-          <View>
-            <Text style={[styles.white, styles.underline, isSignOutHovered && [styles.red, styles.underline]]} 
-            onMouseEnter={handleSignOutHoverEnter} 
-            onMouseLeave={handleSignOutHoverLeave} 
-            onPress={() => {setIsConnected(false); navigation.navigate('Accueil');}}>
-              Se déconnecter
-            </Text>
-          </View>
-          <View style={{ marginHorizontal: '50%' }}></View>
-          <View>
-            <Text style={[styles.white, styles.underline, isDeleteAccountHovered && [styles.red, styles.underline]]} 
-            onMouseEnter={handleDeleteAccountHoverEnter} 
-            onMouseLeave={handleDeleteAccountHoverLeave} 
-            onPress={() => {setIsConnected(false); deleteAccount(); navigation.navigate('Accueil');}}>
-              Supprimer mon compte
-            </Text>
-          </View>
+  if(showLegalInfos) {
+    return <LegalInfo setShowLegalInfos={setShowLegalInfos} />
+  } else {
+    return (
+      <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
+        <View style={styles.iconContainer}>
+          <Icon name="at" size={20} color="lightgrey" />
+          <TextInput
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
+            keyboardType="email-address"
+            placeholderTextColor="lightgrey"
+            value={userEmail}
+          />
         </View>
-    </View>
-  );
+        <View style={[styles.iconContainer, styles.br]}>
+          <Icon name="lock" size={20} color="lightgrey" />
+          <TextInput
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
+            placeholder="Mot de passe actuel"
+            placeholderTextColor="lightgrey"
+            secureTextEntry={true}
+            value={oldPassword}
+            onChangeText={(text) => setOldPassword(text)}
+          />
+        </View>
+        <View style={styles.iconContainer}>
+          <Icon name="lock" size={20} color="lightgrey" />
+          <TextInput
+            style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.boxShadow, styles.white]}
+            placeholder="Nouveau mot de passe"
+            placeholderTextColor="lightgrey"
+            secureTextEntry={true}
+            value={newPassword}
+            onChangeText={(text) => setNewPassword(text)}
+          />
+        </View>
+        <View>
+          <Text style={[
+            isValidate ? [styles.green, styles.bold, styles.textShadow] : null,
+            isUpdateEmpty ||
+            isUpdateNewPasswordEmpty ||
+            isUpdateOldPasswordEmpty ? [styles.red, styles.bold, styles.textShadow] : null,
+          ]}>{isValidate 
+              ? 'Mot de passe changé avec succès !'
+              : isUpdateEmpty
+              ? 'Veuillez renseigner votre ancien et nouveau mot de passe'
+              : isUpdateOldPasswordEmpty
+              ? 'Veuillez renseigner votre ancien mot de passe'
+              : isUpdateNewPasswordEmpty
+              ? 'Veuillez renseigner votre nouveau mot de passe'
+              : null}
+          </Text>
+        </View>
+        <View style={[styles.validateButton, styles.boxShadow]}>
+          <Button title="Valider" color="#1FD43D" onPress={updatePassword} />
+        </View>
+        <View style={styles.loginOptionContainer}>
+            <View>
+              <Text style={[styles.white, styles.underline, isSignOutHovered && [styles.red, styles.underline]]} 
+              onMouseEnter={handleSignOutHoverEnter} 
+              onMouseLeave={handleSignOutHoverLeave} 
+              onPress={() => {setIsConnected(false); navigation.navigate('Accueil');}}>
+                Se déconnecter
+              </Text>
+            </View>
+            <View style={{ marginHorizontal: '50%' }}></View>
+            <View>
+              <Text style={[styles.white, styles.underline, isDeleteAccountHovered && [styles.red, styles.underline]]} 
+              onMouseEnter={handleDeleteAccountHoverEnter} 
+              onMouseLeave={handleDeleteAccountHoverLeave} 
+              onPress={() => {setIsConnected(false); deleteAccount(); navigation.navigate('Accueil');}}>
+                Supprimer mon compte
+              </Text>
+            </View>
+          </View>
+          <Footer setShowLegalInfos={setShowLegalInfos} />
+      </View>
+    );
+  }
 }
