@@ -25,7 +25,9 @@ export default function Credits() {
                 setDimensions({window, screen});
             },
         );
-        return () => subscription?.remove();
+        return () => {
+            subscription.remove();
+        };
     });
 
     if(dimensions.window.height >= dimensions.screen.width) {

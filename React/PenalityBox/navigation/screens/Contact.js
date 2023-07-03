@@ -32,7 +32,9 @@ export default function ContactScreen() {
         setDimensions({ window, screen });
       }
     );
-    return () => subscription?.remove();
+    return () => {
+      subscription.remove();
+    };
   });
 
   const handleSubmit = () => {

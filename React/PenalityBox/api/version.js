@@ -161,4 +161,15 @@ import axios from 'axios';
       },
     });
   };
+
+  export const getLatestVersion = async () => {
+    try {
+      const response = await axios.get('http://localhost:4444/versions/latest');
+      return response.data;
+    } catch (error) {
+      console.error('Error getting latest version:', error);
+      throw error;
+    }
+  };
+
   

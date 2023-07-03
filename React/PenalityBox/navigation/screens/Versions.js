@@ -30,6 +30,10 @@ export default function VersionScreen() {
     });
 
     fetchVersionsData();
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const fetchVersionsData = async () => {

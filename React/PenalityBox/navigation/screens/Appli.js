@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, SafeAreaView, Image, Dimensions } from 'react-native';
+import { View, ScrollView, Text, SafeAreaView, Image, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import LegalInfo from '../../components/Legal';
 import Footer from '../../components/footer';
 import styles from '../../styles/styles';
 import PhoneApp from '../../components/PhoneApp';
+import { getLatestVersion } from '../../api/version';
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
@@ -16,13 +17,37 @@ export default function AppScreen() {
   });
 
   const [showLegalInfos, setShowLegalInfos] = useState(false);
+  const [latestVersion, setLatestVersion] = useState('');
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
       setDimensions({ window, screen });
     });
 
+    fetchLatestVersion();
+
+    return () => {
+      subscription.remove();
+    };
   });
+
+  const handleDownload = () => {
+    const fileUrl = '../../assets/img/android.png'; // Replace with the actual file path
+
+    Linking.openURL(fileUrl)
+      .catch((error) => {
+        console.error('Error while downloading file:', error);
+      });
+  };
+
+  const fetchLatestVersion = async () => {
+    try {
+      const version = await getLatestVersion();
+      setLatestVersion(version);
+    } catch (error) {
+      console.error('Error fetching latest version:', error);
+    }
+  };
 
   if(dimensions.window.height >= dimensions.screen.width) {
     return (
@@ -117,6 +142,16 @@ export default function AppScreen() {
                   {'\t'}Le boîtier peut-être éteint sans perte des
                   paramètres.
                 </Text>
+              </View>
+              <View style={[styles.appTextPosAdjust, styles.row]}>
+                <Text style={[styles.pcSubText, styles.appTextSpaceBetween, styles.bold, styles.textAlign, styles.white]}>
+                  {'\t'}Télécharger la version {latestVersion} :
+                </Text>
+                <TouchableOpacity style={{marginLeft: '2%'}} onPress={handleDownload}>
+                  <Text style={[styles.pcSubText, styles.appTextSpaceBetween, styles.bold, styles.textAlign, styles.blue, styles.underline]}>
+                    ici
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={[styles.appImageContainer, styles.alignItems]}>
                 <Image

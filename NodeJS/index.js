@@ -420,23 +420,6 @@ app.get('/versions/developer/:version', function (req, res) {
   });
 });
 
-app.get('/version/image/:version', function (req, res) {
-  const { version } = req.params;
-  const dbConnect = dbo.getDb();
-
-  dbConnect.collection('versions').findOne({ version }, function(err, result) {
-    if (err) {
-      res.status(400).send('Error fetching version!');
-    } else {
-      if (result) {
-        res.json({ image: result.image});
-      } else {
-        res.status(400).send('Version not found!');
-      }
-    }
-  });
-});
-
 app.get('/versions/image/:version', function (req, res) {
   const { version } = req.params;
   const dbConnect = dbo.getDb();
@@ -452,6 +435,31 @@ app.get('/versions/image/:version', function (req, res) {
       }
     }
   });
+});
+
+app.get('/versions/latest', (req, res) => {
+  const dbConnect = dbo.getDb(); // Get your database connection
+  
+  dbConnect.collection('versions')
+    .find()
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray((err, versions) => {
+      if (err) {
+        console.error('Error retrieving latest version:', err);
+        res.sendStatus(500);
+        return;
+      }
+
+      if (versions.length === 0) {
+        console.error('No versions found');
+        res.sendStatus(404);
+        return;
+      }
+
+      const latestVersion = versions[0].version;
+      res.send(latestVersion);
+    });
 });
 
 app.post('/version/delete', async (req, res) => {

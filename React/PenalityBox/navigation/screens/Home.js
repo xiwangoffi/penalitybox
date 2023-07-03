@@ -21,7 +21,9 @@ export default function HomeScreen() {
       setDimensions({ window, screen });
     });
 
-    return () => subscription?.remove();
+    return () => {
+      subscription.remove();
+    };
   });
 
   if (dimensions.window.height >= dimensions.screen.width) {
