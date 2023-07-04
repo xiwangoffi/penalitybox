@@ -32,7 +32,7 @@ export default function AppScreen() {
   });
 
   const handleDownload = () => {
-    const fileUrl = '../../assets/img/android.png'; // Replace with the actual file path
+    const fileUrl = '../../download/PenalityBox.apk'; // Replace with the actual file path
 
     Linking.openURL(fileUrl)
       .catch((error) => {

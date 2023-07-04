@@ -12,7 +12,7 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**/penalitybox*"
     ],
     "ios": {
       "supportsTablet": true

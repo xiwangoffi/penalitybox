@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Dimensions } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import styles from '../../styles/styles';
 import Footer from '../../components/footer';
@@ -102,7 +102,7 @@ export default function ContactScreen() {
       //Gestion PC
       <View style={[styles.background, styles.alignItems, styles.justifyContent]}>
         <View style={styles.iconContainer}>
-          <Icon name="user" size={20} color="lightgrey" />
+          <FontAwesome name="user" size={20} color="lightgrey" />
           <TextInput
             style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Nom"
@@ -111,7 +111,7 @@ export default function ContactScreen() {
           />
         </View>
         <View style={styles.iconContainer}>
-          <Icon name="user" size={20} color="lightgrey" />
+          <FontAwesome name="user" size={20} color="lightgrey" />
           <TextInput
             style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Prénom"
@@ -120,7 +120,7 @@ export default function ContactScreen() {
           />
         </View>
         <View style={styles.iconContainer}>
-          <Icon name="envelope" size={15} color="lightgrey" />
+          <FontAwesome name="envelope" size={15} color="lightgrey" />
           <TextInput
             style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Mail"
@@ -130,7 +130,7 @@ export default function ContactScreen() {
           />
         </View>
         <View style={styles.iconContainer}>
-          <Icon name={'lightbulb-o'} size={15} color="lightgrey" />
+          <FontAwesome name={'lightbulb-o'} size={15} color="lightgrey" />
           <TextInput
             style={[styles.informationContainer, styles.textAlignCenter, styles.informationBox, styles.formBoxShadow, styles.boxBackground, styles.white]}
             placeholder="Sujet"
