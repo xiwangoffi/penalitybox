@@ -113,7 +113,7 @@ export default function VersionScreen() {
             </View>
           </View>
           <View style={[styles.versionImageContainer, styles.alignItems, styles.justifyContent]}>
-            {image && <Image source={require(`../../assets/versions/${image}`)} style={styles.versionLogo} />}
+            {image && <Image source={require(`../../../../NodeJS/uploads/${image}`)} style={styles.versionLogo} />}
           </View>
         </View>
         <Footer setShowLegalInfos={setShowLegalInfos} />

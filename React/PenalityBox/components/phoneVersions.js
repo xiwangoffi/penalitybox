@@ -93,7 +93,7 @@ export default function phoneVersions() {
                     </View>
                     <View style={styles.phoneDivider} />
                     <View style={[styles.alignItems, styles.justifyContent, {marginTop: '5%'}]}>
-                        {image && <Image source={require(`../assets/versions/${image}`)} style={styles.versionLogo} />}
+                        {image && <Image source={require(`../../../NodeJS/uploads/${image}`)} style={styles.versionLogo} />}
                     </View>
                     <View style={{marginTop: '30%'}}>
                         <Footer setShowLegalInfos={setShowLegalInfos} />

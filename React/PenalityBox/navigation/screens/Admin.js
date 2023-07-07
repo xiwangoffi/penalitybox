@@ -302,7 +302,7 @@ export default function AdminScreen({ navigation }) {
                 imageUri ? (
                   <Image source={{ uri: imageUri }} style={styles.imagePreview} />
                 ) : (
-                  <Image source={require(`../../assets/versions/${selectedVersionData.image}`)} style={styles.imagePreview} />
+                  <Image source={require(`../../../../NodeJS/uploads/${selectedVersionData.image}`)} style={styles.imagePreview} />
                 )
               ) : (
                 <Image source={{ uri: imageUri }} style={styles.imagePreview} />
